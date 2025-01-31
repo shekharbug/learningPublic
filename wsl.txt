@@ -1,0 +1,6 @@
+WSL : Windows Subsystem for Linux
+
+window is already setup. 
+C:\Users\chand>wsl
+shekhar@DESKTOP-K9FSD37:/mnt/c/shekhar/selflearning$
+
