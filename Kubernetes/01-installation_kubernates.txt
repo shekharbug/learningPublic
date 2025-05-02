@@ -26,9 +26,9 @@ Install Tools
     => This tool requires that you have either Docker or Podman installed.
 
 3) minikube
-    => Like kind, minikube is a tool that lets you run Kubernetes locally. 
+    => Like kind, minikube is a tool that lets you run Kubernetes locally.
+    => minikube is local Kubernetes, focusing on making it easy to learn and develop for Kubernetes. 
     => minikube runs an all-in-one or a multi-node local Kubernetes cluster on your personal computer 
-    (including Windows, macOS and Linux PCs) so that you can try out Kubernetes, or for daily development work.
 
 4) kubeadm
     => You can use the kubeadm tool to create and manage Kubernetes clusters.
@@ -108,6 +108,16 @@ oracle@DESKTOP-K9FSD37:/mnt/c/shekhar/learningPublic/Kubernetes$
 
 
 ########################################################
+minikube 
+########
+
+Debian-based distribution:
+    $ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube_latest_amd64.deb
+    $ sudo dpkg -i minikube_latest_amd64.deb
+
+Red Hat:
+    $ curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-latest.x86_64.rpm
+    $ sudo rpm -Uvh minikube-latest.x86_64.rpm
 
 ########################################################
 ########################################################
