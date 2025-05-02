@@ -113,6 +113,9 @@ jenkins@8eacd818892b:/$ cat /var/jenkins_home/secrets/initialAdminPassword
 7cdf03606d9e40ff9bdd034a6d853cad
 jenkins@8eacd818892b:/$
 
+or 
+sudo docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+
 
 
 Unlocking Jenkins:
