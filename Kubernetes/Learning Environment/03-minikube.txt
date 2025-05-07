@@ -1,0 +1,62 @@
+#####################################################################
+filename  : 03-minikube.txt
+Author    : Shekhar
+Created   : 07-May-2025
+Version   : 1.0
+Description: Basic control from minikube
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+Start a cluster by running:
+    $ minikube start
+
+Start a second local cluster (note: This will not work if minikube is using the bare-metal/none driver):
+    $ minikube start -p cluster2
+
+Start a cluster with 2 nodes in the driver of your choice:
+    $ minikube start --nodes 2 -p multinode-demo
+
+Stop your local cluster:
+    $ minikube stop
+
+Delete your local cluster:
+    $ minikube delete
+
+Delete all local clusters and profiles
+    $ minikube delete --all
+
+Access the Kubernetes dashboard running within the minikube cluster:
+    $ minikube dashboard
+
+Adds a node to the given cluster config, and starts it.
+    $ minikube node add [flags]
+
+Deletes a node from a cluster.
+    $ minikube node delete [flags]
+
+Starts an existing stopped node in a cluster.
+    $ minikube node start [flags]
+
+Stops a node in a cluster.
+    $ minikube node stop [flags]
+
+Upgrade your cluster:
+    $ minikube start --kubernetes-version=latest
+
+Once started, you can interact with your cluster using kubectl, just like any other Kubernetes cluster. 
+For instance, starting a server:
+    $ kubectl create deployment hello-minikube --image=kicbase/echo-server:1.0
+
+Exposing a service as a NodePort:
+    $ kubectl expose deployment hello-minikube --type=NodePort --port=8080
+
+minikube makes it easy to open this exposed endpoint in your browser:
+    $ minikube service hello-minikube
+
+#####################################################################
