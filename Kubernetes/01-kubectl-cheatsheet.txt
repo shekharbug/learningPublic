@@ -1,0 +1,132 @@
+#####################################################################
+filename  : 01-kubectl-cheatsheet.txt
+Author    : Shekhar
+Created   : 07-May-2025
+Version   : 1.0
+Description: Kubectl cheatsheet
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+
+configuration:
+  > kubectl looks for a file named config in the $HOME/.kube
+  > You can specify other kubeconfig files by setting the KUBECONFIG environment variable or by setting the --kubeconfig flag.
+    export KUBECONFIG="/u01/abc.cfg"
+
+Syntax:
+    kubectl [command] [TYPE] [NAME] [flags]
+
+    command: for example create, get, describe, delete
+    TYPE: Specifies the resource type.
+        eg: $ kubectl get pod pod1
+
+    NAME: Specifies the name of the resource
+
+To group resources if they are all the same type: TYPE1 name1 name2 name<#>.
+    Example: kubectl get pod example-pod1 example-pod2
+
+To specify resources with one or more files: -f file1 -f file2 -f file<#>
+    Example: kubectl get -f ./pod.yaml
+
+#####################################################################
+Formatting output :
+
+kubectl [command] [TYPE] [NAME] -o <output_format>
+
+-o custom-columns=<spec> # Print a table using a comma separated list of custom columns.
+-o custom-columns-file=<filename> #	Print a table using the custom columns template in the <filename> file.
+-o json #	Output a JSON formatted API object.
+-o jsonpath=<template>	# Print the fields defined in a jsonpath expression.
+-o jsonpath-file=<filename> #	Print the fields defined by the jsonpath expression in the <filename> file.
+-o name	# Print only the resource name and nothing else.
+-o wide #Output in the plain-text format with any additional information. For pods, the node name is included.
+-o yaml	# Output a YAML formatted API object.
+
+Example
+    $ kubectl get pod web-pod-13je7 -o yaml
+
+#####################################################################
+
+Examples: Common operations
+
+
+kubectl apply - Apply or Update a resource from a file or stdin.
+
+# Create a service using the definition in example-service.yaml.
+kubectl apply -f example-service.yaml
+
+# Create a replication controller using the definition in example-controller.yaml.
+kubectl apply -f example-controller.yaml
+
+# Create the objects that are defined in any .yaml, .yml, or .json file within the <directory> directory.
+kubectl apply -f <directory>
+
+=====================================================================
+kubectl get - List one or more resources.
+
+# List all pods in plain-text output format.
+kubectl get pods
+
+# List all pods in plain-text output format and include additional information (such as node name).
+kubectl get pods -o wide
+
+# List the replication controller with the specified name in plain-text output format. Tip: You can shorten and replace the 'replicationcontroller' resource type with the alias 'rc'.
+kubectl get replicationcontroller <rc-name>
+
+# List all replication controllers and services together in plain-text output format.
+kubectl get rc,services
+
+# List all daemon sets in plain-text output format.
+kubectl get ds
+
+# List all pods running on node server01
+kubectl get pods --field-selector=spec.nodeName=server01
+
+=====================================================================
+kubectl describe - Display detailed state of one or more resources, including the uninitialized ones by default.
+
+# Display the details of the node with name <node-name>.
+kubectl describe nodes <node-name>
+
+# Display the details of the pod with name <pod-name>.
+kubectl describe pods/<pod-name>
+
+# Display the details of all the pods that are managed by the replication controller named <rc-name>.
+# Remember: Any pods that are created by the replication controller get prefixed with the name of the replication controller.
+kubectl describe pods <rc-name>
+
+# Describe all pods
+kubectl describe pods
+
+=====================================================================
+kubectl delete - Delete resources either from a file, stdin, or specifying label selectors, names, resource selectors, or resources.
+
+# Delete a pod using the type and name specified in the pod.yaml file.
+kubectl delete -f pod.yaml
+
+# Delete all the pods and services that have the label '<label-key>=<label-value>'.
+kubectl delete pods,services -l <label-key>=<label-value>
+
+# Delete all pods, including uninitialized ones.
+kubectl delete pods --all
+
+=====================================================================
+kubectl exec - Execute a command against a container in a pod.
+
+# Get output from running 'date' from pod <pod-name>. By default, output is from the first container.
+kubectl exec <pod-name> -- date
+
+# Get output from running 'date' in container <container-name> of pod <pod-name>.
+kubectl exec <pod-name> -c <container-name> -- date
+
+# Get an interactive TTY and run /bin/bash from pod <pod-name>. By default, output is from the first container.
+kubectl exec -ti <pod-name> -- /bin/bash
+
+#####################################################################
+
