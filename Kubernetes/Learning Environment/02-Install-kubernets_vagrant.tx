@@ -1,0 +1,42 @@
+#####################################################################
+filename  : 02-Install-kubernets_vagrant.tx
+Author    : Shekhar
+Created   : 07-May-2025
+Version   : 1.0
+Description: Install kubernetes using vagrant
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. Vagrant
+2. 
+#####################################################################
+Vagrant:
+#############
+
+download vagrant: https://developer.hashicorp.com/vagrant/install
+
+Deploy Kubernetes with Vagrant:
+
+Clone the Repository:
+    $ cd /c/shekhar/virtualHosts
+    $ git clone https://github.com/techiescamp/vagrant-kubeadm-kubernetes
+    $ cd vagrant-kubeadm-kubernetes
+
+Start the Vagrant Environment:
+    $ vagrant up
+
+Verify Cluster Configuration:
+    $ vagrant ssh controlplane
+    $ kubectl get nodes
+
+Manage the VMs:
+    $ vagrant halt  # shutdown vms 
+    $ vagrant up  # start vms
+    $ vagrant destroy # destroy vms
+
+# login to root user on vms :
+    $ sudo su 
+#####################################################################
