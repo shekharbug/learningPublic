@@ -125,20 +125,4 @@ ARM:
 
 ########################################################
 ########################################################
-Build kubernetes using docker:
-docker run -itd --hostname controlplane --name controlplane --privileged ubuntu
-docker exec -it controlplane /bin/bash
-
-Do update:
-   $ apt update
-install ifconfig:
-    $ apt install net-tools
-
-install openssh-server on linux host(ubuntu)
-	$apt install openssh-server
-
-docker container stop controlplane
-docker commit 6b416da27931 ubuntu:latest
-docker run -itd --hostname worker1 --name worker1 --privileged ubuntu:latest
-
 ########################################################
