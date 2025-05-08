@@ -1,0 +1,77 @@
+#####################################################################
+filename  : 03-deploy-application.txt
+Author    : Shekhar
+Created   : 08-May-2025
+Version   : 1.0
+Description: Deploy python application in kubernetes
+Reference Link: https://www.digitalocean.com/community/tutorials/how-to-deploy-python-application-on-kubernetes-with-okteto
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+Step 1 - Create a Python Application
+
+mkdir app
+cd app
+python3 -m venv python-env
+source python-env/bin/activate
+pip install flask
+
+
+=> create file app.py
+cat app.py
+=====================================================================
+from flask import Flask
+
+app = Flask(__name__)
+
+@app.route('/')
+def hello():
+    return "Hello, This is a simple Python App!"
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0')
+=====================================================================
+
+Run application:
+    python3 app.py 
+
+Now that the Flask application is running locally, and you can verify it using curl:
+    curl -X GET -H "Content-Type: application/json" http://localhost:5000
+
+#####################################################################
+Step 2 - Dockerize Python Application
+
+create Dockerfile file.
+cat Dockerfile
+=====================================================================
+FROM python:3.8-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the current directory contents into the container at /app
+ADD app.py /app
+
+# Install any needed dependencies specified in requirements.txt
+RUN pip install flask
+
+# Make port 5000 available to the world outside this container
+EXPOSE 5000
+
+# Define environment variable
+ENV NAME=DockerizedPythonApp
+
+# Run app.py when the container launches
+CMD ["python3", "./app.py"]
+=====================================================================
+
+docker build -t my-app .
+docker run -dit -p 5000:5000 my-app:latest
+docker ps
+
+#####################################################################
