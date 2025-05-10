@@ -129,7 +129,7 @@ Step 5) Do port forwarding access application:
         Handling connection for 7080
         Handling connection for 7080
 
-
+    => Access url http://127.0.0.1:7080
 
     $ kubectl get deployment
     $ kubectl get service
