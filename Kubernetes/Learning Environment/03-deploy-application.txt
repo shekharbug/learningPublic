@@ -49,7 +49,7 @@ Step 2 - Dockerize Python Application
 create Dockerfile file.
 cat Dockerfile
 =====================================================================
-FROM python:3.8-slim
+FROM python:3.12-slim
 
 # Set the working directory in the container
 WORKDIR /app
@@ -59,6 +59,7 @@ ADD app.py /app
 
 # Install any needed dependencies specified in requirements.txt
 RUN pip install flask
+# RUN pip install -r requirements.txt
 
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
@@ -67,11 +68,67 @@ EXPOSE 5000
 ENV NAME=DockerizedPythonApp
 
 # Run app.py when the container launches
-CMD ["python3", "./app.py"]
+CMD ["python3", "/app/app.py"]
 =====================================================================
 
-docker build -t my-app .
-docker run -dit -p 5000:5000 my-app:latest
-docker ps
+$ eval $(minikube -p minikube docker-env)
+$ docker build -t my-app .
+$ docker run -dit -p 5000:5000 my-app:latest
+$ docker ps
 
 #####################################################################
+
+Step 3 - Push Python Docker Image to DockerHub Registry
+    => as of now skiping
+
+    OR 
+
+Local Registry
+    => Set the local registry first using this command
+    $ docker run -d -p 8000:5000 --restart=always --name registry registry:2
+
+Image Tag
+    => Given a Dockerfile, the image could be built and tagged this easy way:
+    $ docker build . -t localhost:8000/my-app
+
+Push the image on the local repo:
+    => docker push localhost:8000/my-app
+
+#####################################################################
+
+Step 4 - Create Kubernetes Manifests to Deploy Python Application
+
+Create a manifest file named my_flask_app_deploy.yaml:
+
+Deploy application:
+    $ kubectl apply -f my_flask_app_deploy.yaml
+    $ kubectl get deploy
+
+eg:
+$ kubectl apply -f my_flask_app_deploy.yaml
+deployment.apps/myflaskapp-deploy created
+$ kubectl get deploy
+NAME                READY   UP-TO-DATE   AVAILABLE   AGE
+myflaskapp-deploy   0/1     1            0           76s
+
+#####################################################################
+
+Step 5)
+
+$ kubectl get deployment
+$ kubectl get service
+$ kubectl get pods
+$ minikube dashboard
+$ minikube service flask-app-service
+
+#####################################################################
+https://stackoverflow.com/questions/57167104/how-to-use-local-docker-image-in-kubernetes-via-kubectl
+
+
+Delete deployment:
+    $ kubectl delete deployment <deployment-name>
+    $ kubectl delete deployment <deployment-name> --namespace=<namespace-name>
+
+
+eval $(minikube -p minikube docker-env)
+docker build -t shekharapp .

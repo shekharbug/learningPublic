@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: shekharapp
+  template:
+    metadata:
+      labels:
+        app: shekharapp
+    spec:
+      containers:
+      - name: shekharapp
+        image: shekharapp
+        imagePullPolicy: Never
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 5000
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: flask-app-service
+spec:
+  selector:
+    app: shekharapp
+  ports:
+  - port: 6000
+    targetPort: 5000
+  type: LoadBalancer
