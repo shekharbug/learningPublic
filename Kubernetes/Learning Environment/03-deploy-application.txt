@@ -72,9 +72,13 @@ CMD ["python3", "/app/app.py"]
 =====================================================================
 
 $ eval $(minikube -p minikube docker-env)
-$ docker build -t my-app .
-$ docker run -dit -p 5000:5000 my-app:latest
+$ docker build -t shekharapp .
+$ docker run -dit -p 9000:5000 shekharapp:latest
+$  docker logs <container-id>
 $ docker ps
+
+Load the Image into Minikube:
+    $ minikube image load shekharapp:latest
 
 #####################################################################
 
@@ -113,13 +117,28 @@ myflaskapp-deploy   0/1     1            0           76s
 
 #####################################################################
 
-Step 5)
+Step 5) Do port forwarding access application:
+    
+    $ kubectl get svc
+    NAME                TYPE           CLUSTER-IP       EXTERNAL-IP      PORT(S)          AGE
+    flask-app-service   LoadBalancer   10.107.251.202   10.107.251.202   6000:31143/TCP   66s
+    
+    $ kubectl port-forward service/flask-app-service 7080:6000
+        Forwarding from 127.0.0.1:7080 -> 5000
+        Forwarding from [::1]:7080 -> 5000
+        Handling connection for 7080
+        Handling connection for 7080
 
-$ kubectl get deployment
-$ kubectl get service
-$ kubectl get pods
-$ minikube dashboard
-$ minikube service flask-app-service
+
+
+    $ kubectl get deployment
+    $ kubectl get service
+    $ kubectl get pods
+    $ minikube service flask-app-service
+    $ kubectl describe service flask-app-service
+    
+
+$ kubectl get service  flask-app-service --output='jsonpath="{.spec.ports[0].nodePort}"'
 
 #####################################################################
 https://stackoverflow.com/questions/57167104/how-to-use-local-docker-image-in-kubernetes-via-kubectl
@@ -132,3 +151,32 @@ Delete deployment:
 
 eval $(minikube -p minikube docker-env)
 docker build -t shekharapp .
+
+
+Tunnel:
+    $ minikube tunnel
+
+#####################################################################
+Testing :
+
+$ eval $(minikube -p minikube docker-env)
+$ docker image ls |grep shekharapp
+shekharapp                    latest      3d8a28c5ebeb   2 days ago      136MB
+
+$ docker ps -a |grep 3d8a28c5ebeb
+CONTAINER ID   IMAGE                          COMMAND                  CREATED          STATUS          PORTS     NAMES
+745c5a322096   3d8a28c5ebeb                   "python3 /app/app.py"    8 minutes ago    Up 8 minutes              k8s_shekharapp_flask-app-deployment-7b99974cf-96fh6_default_6a0ac79e-97d6-4b02-86dc-3f3cce282f32_0
+8df5122d743d   3d8a28c5ebeb                   "python3 /app/app.py"    8 minutes ago    Up 8 minutes              k8s_shekharapp_flask-app-deployment-7b99974cf-qb4v9_default_406c225c-49b9-43df-9c8c-83039dc43776_0
+
+Stop one container:
+    $ docker container stop 745c5a322096
+
+ => if you will stop one container then it will start.
+
+    $ docker ps -a |grep 3d8a28c5ebeb
+    ab228b996cb2   3d8a28c5ebeb                   "python3 /app/app.py"    27 seconds ago   Up 24 seconds                         k8s_shekharapp_flask-app-deployment-7b99974cf-96fh6_default_6a0ac79e-97d6-4b02-86dc-3f3cce282f32_1
+    745c5a322096   3d8a28c5ebeb                   "python3 /app/app.py"    11 minutes ago   Exited (0) 28 seconds ago             k8s_shekharapp_flask-app-deployment-7b99974cf-96fh6_default_6a0ac79e-97d6-4b02-86dc-3f3cce282f32_0
+    8df5122d743d   3d8a28c5ebeb                   "python3 /app/app.py"    11 minutes ago   Up 11 minutes                         k8s_shekharapp_flask-app-deployment-7b99974cf-qb4v9_default_406c225c-49b9-43df-9c8c-83039dc43776_0
+
+
+==> Application will be accessible.
