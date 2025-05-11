@@ -13,141 +13,131 @@ Index
 1. 
 2. 
 #####################################################################
+Basic Commands:
 
-configuration:
-  > kubectl looks for a file named config in the $HOME/.kube
-  > You can specify other kubeconfig files by setting the KUBECONFIG environment variable or by setting the --kubeconfig flag.
-    export KUBECONFIG="/u01/abc.cfg"
+kubectl --help : kubectl help
+kubectl version: Display the Kubernetes client and server versions.
+kubectl cluster-info: Display information about the Kubernetes cluster.
 
-Syntax:
-    kubectl [command] [TYPE] [NAME] [flags]
+kubectl get: List resources.
+    => kubectl get <resource_type> [<resource_name> -n <namespaces> -o wide|yaml|json ]
 
-    command: for example create, get, describe, delete
-    TYPE: Specifies the resource type.
-        eg: $ kubectl get pod pod1
+    <resource_type>:
+        => pods 
+        => services
+        => deployments
+        => nodes
+        => namespaces
 
-    NAME: Specifies the name of the resource
+    kubectl get pods: List all pods in the current namespace.
+    kubectl get pods --all-namespaces: List all pods across all namespaces.
+    kubectl get services: List all services in the current namespace.
+    kubectl get deployments: List all deployments in the current namespace.
+    kubectl get nodes: List all nodes in the cluster.
+    kubectl get namespaces: List all namespaces.
+    kubectl get events: List events in the current namespace.
+    kubectl get <resource_type> <resource_name>: Get details of a specific resource (e.g., kubectl get pod my-pod).
+    kubectl get <resource_type> -o wide: Show more details, like node and IP addresses.
+    kubectl get <resource_type> -l <label_key>=<label_value>: List resources with a specific label.
 
-To group resources if they are all the same type: TYPE1 name1 name2 name<#>.
-    Example: kubectl get pod example-pod1 example-pod2
+kubectl describe: Show detailed information about a resource.
+    => kubectl get <resource_type> [<resource_name> -n <namespaces>]
 
-To specify resources with one or more files: -f file1 -f file2 -f file<#>
-    Example: kubectl get -f ./pod.yaml
+kubectl apply -f <filename.yaml>: Apply a configuration from a YAML or JSON file to create or update resources.
+kubectl delete -f <filename.yaml>: Delete resources defined in a YAML or JSON file.
+kubectl create deployment <deployment_name> --image=<image_name>: Create a new deployment.
+kubectl expose deployment <deployment_name> --type=LoadBalancer --port=<port> --target-port=<target_port>: Create a service to expose a deployment.
 
-#####################################################################
-Formatting output :
+Logs:
+    kubectl logs <pod_name>: View the logs of a pod's container.
+    kubectl logs -f <pod_name>: Follow the logs in real-time.
+    kubectl logs <pod_name> -c <container_name>: View logs from a specific container in a pod.
 
-kubectl [command] [TYPE] [NAME] -o <output_format>
+    kubectl logs [-f --previous --since=<time> --timestamps --tail=<line> ]<pod_name> [ -c <container_name>]
 
--o custom-columns=<spec> # Print a table using a comma separated list of custom columns.
--o custom-columns-file=<filename> #	Print a table using the custom columns template in the <filename> file.
--o json #	Output a JSON formatted API object.
--o jsonpath=<template>	# Print the fields defined in a jsonpath expression.
--o jsonpath-file=<filename> #	Print the fields defined by the jsonpath expression in the <filename> file.
--o name	# Print only the resource name and nothing else.
--o wide #Output in the plain-text format with any additional information. For pods, the node name is included.
--o yaml	# Output a YAML formatted API object.
+    Options:
+        -c <container_name> or --container=<container_name> : View logs from a specific container in a pod.
+            => kubectl logs <pod_name> -c <container_name>
 
-Example
-    $ kubectl get pod web-pod-13je7 -o yaml
+        -f or --follow: This option allows you to stream the logs in real-time
+            => kubectl logs -f <pod_name>
 
-#####################################################################
+        --previous: Retrieves logs from a previous instance of the container if it has restarted. 
+            => kubectl logs --previous <pod_name>
 
-Examples: Common operations
+        --since=<duration>: Shows logs within a specific time window. 
+            You can specify the duration in seconds, minutes (m), hours (h), or a combination (e.g., 5m, 1h30m).
+            => kubectl logs <pod_name> --since=10m
 
+        --timestamps: Includes timestamps in the log output
+            => kubectl logs --timestamps <pod_name>
 
-kubectl apply - Apply or Update a resource from a file or stdin.
+        --tail=<number>: Shows only the last specified number of lines from the logs
+            => kubectl logs --tail=20 <pod_name>
 
-# Create a service using the definition in example-service.yaml.
-kubectl apply -f example-service.yaml
-
-# Create a replication controller using the definition in example-controller.yaml.
-kubectl apply -f example-controller.yaml
-
-# Create the objects that are defined in any .yaml, .yml, or .json file within the <directory> directory.
-kubectl apply -f <directory>
-
-=====================================================================
-kubectl get - List one or more resources.
-
-# List all pods in plain-text output format.
-kubectl get pods
-
-# List all pods in plain-text output format and include additional information (such as node name).
-kubectl get pods -o wide
-
-# List the replication controller with the specified name in plain-text output format. Tip: You can shorten and replace the 'replicationcontroller' resource type with the alias 'rc'.
-kubectl get replicationcontroller <rc-name>
-
-# List all replication controllers and services together in plain-text output format.
-kubectl get rc,services
-
-# List all daemon sets in plain-text output format.
-kubectl get ds
-
-# List all pods running on node server01
-kubectl get pods --field-selector=spec.nodeName=server01
-
-=====================================================================
-kubectl describe - Display detailed state of one or more resources, including the uninitialized ones by default.
-
-# Display the details of the node with name <node-name>.
-kubectl describe nodes <node-name>
-
-# Display the details of the pod with name <pod-name>.
-kubectl describe pods/<pod-name>
-
-# Display the details of all the pods that are managed by the replication controller named <rc-name>.
-# Remember: Any pods that are created by the replication controller get prefixed with the name of the replication controller.
-kubectl describe pods <rc-name>
-
-# Describe all pods
-kubectl describe pods
-
-=====================================================================
-kubectl delete - Delete resources either from a file, stdin, or specifying label selectors, names, resource selectors, or resources.
-
-# Delete a pod using the type and name specified in the pod.yaml file.
-kubectl delete -f pod.yaml
-
-# Delete all the pods and services that have the label '<label-key>=<label-value>'.
-kubectl delete pods,services -l <label-key>=<label-value>
-
-# Delete all pods, including uninitialized ones.
-kubectl delete pods --all
-
-=====================================================================
-kubectl exec - Execute a command against a container in a pod.
-
-# Get output from running 'date' from pod <pod-name>. By default, output is from the first container.
-kubectl exec <pod-name> -- date
-
-# Get output from running 'date' in container <container-name> of pod <pod-name>.
-kubectl exec <pod-name> -c <container-name> -- date
-
-# Get an interactive TTY and run /bin/bash from pod <pod-name>. By default, output is from the first container.
-kubectl exec -ti <pod-name> -- /bin/bash
-
-=====================================================================
-kubectl logs - Print the logs for a container in a pod.
-
-# Return a snapshot of the logs from pod <pod-name>.
-kubectl logs <pod-name>
-
-# Start streaming the logs from pod <pod-name>. This is similar to the 'tail -f' Linux command.
-kubectl logs -f <pod-name>
-
-=====================================================================
-kubectl diff - View a diff of the proposed updates to a cluster.
-
-# Diff resources included in "pod.json".
-kubectl diff -f pod.json
-
-# Diff file read from stdin.
-cat service.yaml | kubectl diff -f -
+        -n <namespace> or --namespace=<namespace>: If the pod you're interested in is in a different namespace than your currently configured one
+            => kubectl logs <pod_name> -n my-namespace
 
 
 
+kubectl exec -it <pod_name> -- <command>: Execute a command inside a running container.
+kubectl exec -it <pod_name> -- /bin/bash: Open an interactive shell in the container.
 
-#####################################################################
+Namespace Management:
+    kubectl create namespace <namespace_name>: Create a new namespace.
+    kubectl config set-context --current --namespace=<namespace_name>: Set the default namespace for subsequent commands in the current context.
+    kubectl delete namespace <namespace_name>: Delete a namespace and all its resources.
 
+
+Node Management:
+    kubectl get nodes: List all nodes.
+    kubectl describe node <node_name>: Get detailed information about a specific node.
+    kubectl label node <node_name> <label_key>=<label_value>: Add or update a label on a node.
+    kubectl taint node <node_name> <key>=<value>:<effect>: Add or update a taint on a node.
+    kubectl cordon <node_name>: Mark a node as unschedulable.
+    kubectl uncordon <node_name>: Mark a node as schedulable.
+    kubectl drain <node_name> --delete-local-data --force --ignore-daemonsets: Evict all pods from a node in preparation for maintenance.
+
+Pod Management:
+    kubectl create -f <pod_definition.yaml>: Create a pod from a YAML file.
+    kubectl get pods: List pods.
+    kubectl describe pod <pod_name>: Get details of a pod.
+    kubectl logs <pod_name>: View pod logs.
+    kubectl exec -it <pod_name> -- <command>: Execute commands in a pod.
+    kubectl delete pod <pod_name>: Delete a pod.
+
+Deployment Management:
+
+    kubectl create deployment <deployment_name> --image=<image_name>: Create a deployment.
+    kubectl get deployments: List deployments.
+    kubectl describe deployment <deployment_name>: Get details of a deployment.
+    kubectl scale deployment <deployment_name> --replicas=<count>: Scale the number of replicas in a deployment.
+    kubectl set image deployment/<deployment_name> <container_name>=<new_image>: Update the container image of a deployment.
+    kubectl rollout status deployment/<deployment_name>: Show the rollout status of a deployment.
+    kubectl rollout history deployment/<deployment_name>: View the rollout history of a deployment.
+    kubectl rollout undo deployment/<deployment_name> --to-revision=<revision_number>: Rollback a deployment to a previous revision.
+    kubectl delete deployment <deployment_name>: Delete a deployment.
+
+Service Management:
+    kubectl expose deployment <deployment_name> --type=<ServiceType> --port=<port> --target-port=<target_port> --name=<service_name>: Expose a deployment as a service (ClusterIP, NodePort, LoadBalancer).
+    kubectl get services: List services.
+    kubectl describe service <service_name>: Get details of a service.
+    kubectl edit service <service_name>: Edit a service.
+    kubectl delete service <service_name>: Delete a service.
+
+
+Scaling:
+    kubectl scale deployment <deployment_name> --replicas=<count>: Scale a deployment.
+    kubectl scale statefulset <statefulset_name> --replicas=<count>: Scale a statefulset.
+    kubectl autoscale deployment <deployment_name> --min=<min_replicas> --max=<max_replicas> --cpu-percent=<target_cpu_utilization>: Automatically scale a deployment based on CPU utilization.
+
+
+Troubleshooting:
+
+    kubectl logs <pod_name>: View pod logs.
+    kubectl describe pod <pod_name>: Get detailed information about a pod, including events.
+    kubectl get events: List events to see what's happening in the cluster.
+    kubectl exec -it <pod_name> -- <command>: Execute commands inside a container to debug.
+    kubectl port-forward <pod_name> <local_port>:<pod_port>: Forward a local port to a port on a pod for direct access.
+    kubectl top node: Display resource usage (CPU/memory) of nodes.
+    kubectl top pod: Display resource usage of pods.

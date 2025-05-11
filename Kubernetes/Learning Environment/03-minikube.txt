@@ -59,4 +59,17 @@ Exposing a service as a NodePort:
 minikube makes it easy to open this exposed endpoint in your browser:
     $ minikube service hello-minikube
 
+minikube tunnel
+    > Creates a network tunnel to expose services of type LoadBalancer to the host. 
+    > This is often necessary on Minikube as it doesn't have a native LoadBalancer implementation.
+    > You'll usually need to run this in a separate terminal.
+    => minikube tunnel
+
+minikube service <service_name> --url:
+    > Gets the external URL for a specific Kubernetes service
+    => minikube service my-service --url
+
+minikube config view
+    > Displays the current Minikube configuration settings.
+    => minikube config view
 #####################################################################

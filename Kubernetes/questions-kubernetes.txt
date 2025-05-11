@@ -1,0 +1,60 @@
+#####################################################################
+filename  : questions-kubernetes.txt
+Author    : Shekhar
+Created   : 11-May-2025
+Version   : 1.0
+Description: 
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+Beginner/Fundamental Level:
+
+What is Kubernetes and what are its core benefits?
+Explain the concept of a Pod in Kubernetes. How are containers related to Pods?
+What is a Node in Kubernetes? What are the key components running on a Node?
+What is the Kubernetes Control Plane? Name some of its key components and their roles.
+What is a Kubernetes Deployment? How does it help in managing applications?
+Explain the purpose of a Kubernetes Service. What are the different types of Services?
+What are Kubernetes Namespaces and why are they useful?
+What is kubectl? Name a few commonly used kubectl commands.
+What is a YAML manifest in Kubernetes? What are the essential fields in a Pod manifest?
+What is the difference between kubectl apply and kubectl create?
+Intermediate Level:
+
+Explain the lifecycle of a Pod in Kubernetes. What are some common Pod states?
+How do you perform a rolling update of an application in Kubernetes? What strategies are involved?
+What are ReplicaSets and how are they related to Deployments?
+Explain how networking works between Pods in a Kubernetes cluster. What is a CNI?
+How do you expose an application running in Kubernetes to the outside world? Discuss different methods.
+What are ConfigMaps and Secrets in Kubernetes? How are they used by applications?
+Explain how Persistent Volumes (PV) and Persistent Volume Claims (PVC) work in Kubernetes. Why are they important for stateful applications?
+What are Kubernetes labels and selectors? How are they used to organize and select resources?
+What are Kubernetes Annotations? How do they differ from Labels?
+How can you monitor the health and performance of your Kubernetes cluster and applications?
+Advanced Level:
+
+Discuss different Container Network Interface (CNI) options for Kubernetes. What are the pros and cons of a couple of popular choices?
+Explain the concept of Network Policies in Kubernetes. How can you implement network segmentation and security?
+How does Kubernetes handle scheduling of Pods onto Nodes? What factors influence the scheduling decisions?
+What are Taints and Tolerations in Kubernetes? How can you use them to control Pod scheduling on specific Nodes?
+Explain the role of Admission Controllers in the Kubernetes API request lifecycle. Give some examples of built-in Admission Controllers.
+Discuss different strategies for managing stateful applications in Kubernetes (e.g., using StatefulSets, Operators).
+How can you implement autoscaling in Kubernetes? Explain both Horizontal Pod Autoscaler (HPA) and Vertical Pod Autoscaler (VPA).
+What are Custom Resource Definitions (CRDs) and Operators in Kubernetes? How can they extend the functionality of the platform?
+Discuss best practices for securing a Kubernetes cluster. Consider aspects like RBAC, network security, and Secrets management.
+How would you troubleshoot a scenario where a Pod is stuck in the Pending state? What are the common reasons for this?
+Troubleshooting & Scenario-Based Questions:
+
+A Pod is failing to start and shows a CrashLoopBackOff status. How would you diagnose the issue? What steps would you take to resolve it?
+Your application is experiencing intermittent network connectivity issues with another service within the same Kubernetes cluster. How would you troubleshoot this?
+You need to upgrade the Kubernetes version of your cluster. What are the key considerations and steps involved in a safe upgrade process?
+Your application is running out of memory. How would you monitor its resource usage and implement resource requests and limits in Kubernetes?
+You need to implement a blue/green deployment strategy for your application in Kubernetes. How would you achieve this using Deployments and Services?
+
+#####################################################################
