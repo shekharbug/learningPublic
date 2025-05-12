@@ -9,7 +9,9 @@ Source : https://kubernetes.io/docs/home/
 
 ########################################################
 Index:
-  1. Installation.txt => installation instruction
+  1. kubectl.txt # installation of kubectl 
+  2. minikube.txt # installation of minikube 
+  3. Vagrant.txt # installation of Vagrant 
 
 ########################################################
 Installation.txt
@@ -34,7 +36,7 @@ Install Tools
     => You can use the kubeadm tool to create and manage Kubernetes clusters.
 
 ########################################################
-kubectl:
+kubectl.txt:
 
 Debian-based distribution:
 ===========================
@@ -108,7 +110,7 @@ oracle@DESKTOP-K9FSD37:/mnt/c/shekhar/learningPublic/Kubernetes$
 
 
 ########################################################
-minikube 
+minikube.txt
 ########
 
 Debian-based distribution:
@@ -124,5 +126,33 @@ ARM:
    sudo rpm -Uvh minikube-latest.aarch64.rpm
 
 ########################################################
+Vagrant.txt:
+#############
+
+download vagrant: https://developer.hashicorp.com/vagrant/install
+
+Deploy Kubernetes with Vagrant:
+
+Clone the Repository:
+    $ cd /c/shekhar/virtualHosts
+    $ git clone https://github.com/techiescamp/vagrant-kubeadm-kubernetes
+    $ cd vagrant-kubeadm-kubernetes
+
+Start the Vagrant Environment:
+    $ vagrant up
+
+Verify Cluster Configuration:
+    $ vagrant ssh controlplane
+    $ kubectl get nodes
+
+Manage the VMs:
+    $ vagrant halt  # shutdown vms 
+    $ vagrant up  # start vms
+    $ vagrant destroy # destroy vms
+
+# login to root user on vms :
+    $ sudo su 
+#####################################################################
+
 ########################################################
 ########################################################

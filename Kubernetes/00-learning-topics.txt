@@ -1,0 +1,132 @@
+#####################################################################
+filename  : 00-learning-topics.txt
+Author    : Shekhar
+Created   : 12-May-2025
+Version   : 1.0
+Description: Key points to be learn on Kubernetes
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Phase 1: Fundamentals
+
+Containers and Docker:
+
+    What are Containers? 
+        > Understanding the concept of 
+            > OS-level virtualization
+            > isolation
+            > lightweight packaging of applications.
+
+    Docker Basics: 
+        > Learn how to work with Docker images (build, pull, push)
+        > containers (run, stop, manage lifecycle)
+        > Dockerfiles
+
+    Container Registries
+        > Understand where Docker images are stored
+        > how to interact with registries like Docker Hub or private registries.
+
+Kubernetes Architecture:
+
+    Control Plane Components:
+        > kube-apiserver
+            > The central control point, exposing the Kubernetes API.
+        
+        > etcd
+            > A distributed key-value store that serves as Kubernetes' backing store for all cluster data.
+        
+        > kube-scheduler
+            > Assigns Pods to Nodes based on resource availability and constraints.
+
+        > kube-controller-manager
+            > Runs controller processes (e.g., Node Controller, Replication Controller, Endpoint Controller).
+
+        > cloud-controller-manager (Optional)
+            > Integrates with cloud providers for managing cloud-specific resources.
+
+    Node Components:
+        > kubelet
+            > An agent that runs on each Node and manages the containers in a Pod.
+        
+        > kube-proxy
+            > A network proxy that runs on each Node, implementing Kubernetes networking services.
+
+        > Container Runtime (Docker, containerd, CRI-O): The underlying software that runs containers.
+
+        > Kubernetes API: 
+            > Understand how to interact with the Kubernetes cluster using kubectl and the API.
+
+Core Kubernetes Objects (Workloads):
+
+    Pods: The smallest deployable units in Kubernetes, representing a group of one or more containers that share storage and network.
+    ReplicaSets: Ensure a specified number of Pod replicas are running at all times.
+    Deployments: Provide declarative updates for Pods and ReplicaSets, enabling rolling updates and rollbacks.
+    StatefulSets: Manage stateful applications, providing stable network identities, persistent storage, and ordered, graceful deployment and scaling. Understand the differences between Deployments and StatefulSets.
+    DaemonSets: Ensure that a copy of a Pod runs on all (or some specified) Nodes in the cluster (e.g., for logging, monitoring agents).
+    Jobs and CronJobs: Manage batch workloads that run to completion (Jobs) or are scheduled to run periodically (CronJobs).
+
+
+Phase 2: Networking and Storage
+
+Kubernetes Networking:
+
+    Pod Networking: How Pods communicate with each other. Understand the concept of a flat network.
+    Services: An abstraction that provides a stable IP address and DNS name for a set of Pods, enabling load balancing and discovery. Explore different Service types (ClusterIP, NodePort, LoadBalancer, ExternalName).
+    Network Policies: Control network traffic between Pods and other network entities using labels and selectors.
+    Ingress: Manages external access to the services within the cluster, typically by providing HTTP and HTTPS routing. Understand Ingress Controllers and Ingress resources.
+    DNS in Kubernetes: How service discovery works using the internal DNS server.
+    
+Kubernetes Storage:
+
+    Volumes: Understand the basic concept of volumes for providing storage to containers within a Pod.
+    Persistent Volumes (PVs): Provisioned storage in the cluster that exists independently of Pods.
+    Persistent Volume Claims (PVCs): Requests for storage by users, which Kubernetes matches to available PVs.
+    Storage Classes: Enable dynamic provisioning of PVs based on defined storage characteristics.
+    Access Modes: Understand ReadWriteOnce, ReadOnlyMany, and ReadWriteMany.
+    Volume Types: Explore different types of volumes (e.g., emptyDir, hostPath, nfs, cloud provider volumes, csi).
+
+
+Phase 3: Configuration and Management
+
+Configuration:
+
+    ConfigMaps: Store non-confidential configuration data as key-value pairs or as whole files, which can be consumed by Pods.
+    Secrets: Store sensitive information (passwords, API keys) securely. Understand different types of Secrets.
+    Downward API: Expose information about the Pod and its environment to the containers running in it.
+
+Resource Management:
+    Requests and Limits: Define the minimum resources (CPU, memory) a container needs and the maximum it can consume.
+    Quality of Service (QoS) Classes: Understand Guaranteed, Burstable, and BestEffort QoS for managing resource allocation and eviction priorities.
+    Namespaces: Isolate resources within a cluster, providing logical separation for teams or projects.
+    Resource Quotas: Limit the total amount of resources that can be consumed within a Namespace.
+    Limit Ranges: Enforce minimum and maximum resource constraints per container in a Namespace.
+
+Security:
+    RBAC (Role-Based Access Control): Control who can access Kubernetes API objects and what actions they can perform. Understand Roles, ClusterRoles, RoleBindings, and ClusterRoleBindings.
+    Service Accounts: Provide identities for processes running in Pods to interact with the Kubernetes API.
+    Network Policies (Revisited): Enforcing network segmentation and isolation.
+    Secrets Management (Revisited): Securely storing and accessing sensitive data.
+    Security Contexts: Define security settings for Pods and containers (e.g., running as non-root, capabilities).
+
+Phase 4: Advanced Topics and Operations
+
+    Helm: A package manager for Kubernetes, simplifying the deployment and management of applications. Understand Charts, Repositories, and Releases.
+    Operators: Extend Kubernetes' functionality to manage complex stateful applications (e.g., databases, message queues) in an automated and Kubernetes-native way.
+
+Monitoring and Logging:
+    Metrics Server and Heapster (Legacy): Collect resource usage metrics from Nodes and Pods.
+    Prometheus and Grafana: Popular tools for comprehensive monitoring and visualization.
+    Elasticsearch, Fluentd, Kibana (EFK Stack) / Loki, Promtail, Grafana (LPG Stack): Solutions for centralized logging.
+
+Scaling:
+    Horizontal Pod Autoscaler (HPA): Automatically scales the number of Pod replicas based on observed CPU utilization or custom metrics.
+    Vertical Pod Autoscaler (VPA): Automatically adjusts the resource requests and limits of Pods based on their usage.
+    Cluster Autoscaler: Automatically adjusts the size of the Kubernetes cluster (number of Nodes) based on the resource needs of Pods.
+
+Troubleshooting: Learn common Kubernetes issues and how to diagnose and resolve them using kubectl logs, kubectl describe, kubectl get events, etc.
+Upgrades and Maintenance: Understand the process of upgrading a Kubernetes cluster and performing routine maintenance tasks.
+Custom Resource Definitions (CRDs) and Admission Controllers: Learn how to extend the Kubernetes API and enforce custom policies.
+#####################################################################
+#####################################################################

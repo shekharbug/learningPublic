@@ -15,7 +15,10 @@ Index
 #####################################################################
 Beginner/Fundamental Level:
 
-What is Kubernetes and what are its core benefits?
+1. What is Kubernetes and what are its core benefits?
+
+#####################################################################
+
 Explain the concept of a Pod in Kubernetes. How are containers related to Pods?
 What is a Node in Kubernetes? What are the key components running on a Node?
 What is the Kubernetes Control Plane? Name some of its key components and their roles.

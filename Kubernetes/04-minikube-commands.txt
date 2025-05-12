@@ -1,5 +1,5 @@
 #####################################################################
-filename  : 03-minikube.txt
+filename  : 03-minikube-commands.txt
 Author    : Shekhar
 Created   : 07-May-2025
 Version   : 1.0
@@ -72,4 +72,25 @@ minikube service <service_name> --url:
 minikube config view
     > Displays the current Minikube configuration settings.
     => minikube config view
+
+minikube addons list: 
+    > Shows a list of available Minikube addon
+    => minikube addons list
+
+minikube addons enable <addon_name>:
+    > Enables a specific Minikube addon (e.g., ingress, metrics-server).
+    => minikube addons enable ingress
+    => minikube addons disable ingress
+
+
+minikube image load <image_name>:
+    > Loads a Docker image from your host machine's Docker daemon into the Minikube cluster's image registry.
+    > This is useful for using locally built images.
+    => minikube image load my-local-image:latest
+
+minikube mount <host_path>:<guest_path>:
+    > Mounts a directory from your host machine into the Minikube VM, making it accessible to your pods.
+    => minikube mount /path/on/host:/path/in/minikube
+    
+
 #####################################################################
