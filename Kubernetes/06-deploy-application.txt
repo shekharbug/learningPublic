@@ -1,5 +1,5 @@
 #####################################################################
-filename  : 03-deploy-application.txt
+filename  : 06-deploy-application.txt
 Author    : Shekhar
 Created   : 08-May-2025
 Version   : 1.0
@@ -71,10 +71,10 @@ ENV NAME=DockerizedPythonApp
 CMD ["python3", "/app/app.py"]
 =====================================================================
 
-$ eval $(minikube -p minikube docker-env)
+# $ eval $(minikube -p minikube docker-env)
 $ docker build -t shekharapp .
 $ docker run -dit -p 9000:5000 shekharapp:latest
-$  docker logs <container-id>
+$ docker logs <container-id>
 $ docker ps
 
 Load the Image into Minikube:

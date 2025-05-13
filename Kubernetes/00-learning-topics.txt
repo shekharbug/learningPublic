@@ -60,34 +60,73 @@ Kubernetes Architecture:
 
 Core Kubernetes Objects (Workloads):
 
-    Pods: The smallest deployable units in Kubernetes, representing a group of one or more containers that share storage and network.
-    ReplicaSets: Ensure a specified number of Pod replicas are running at all times.
-    Deployments: Provide declarative updates for Pods and ReplicaSets, enabling rolling updates and rollbacks.
-    StatefulSets: Manage stateful applications, providing stable network identities, persistent storage, and ordered, graceful deployment and scaling. Understand the differences between Deployments and StatefulSets.
-    DaemonSets: Ensure that a copy of a Pod runs on all (or some specified) Nodes in the cluster (e.g., for logging, monitoring agents).
-    Jobs and CronJobs: Manage batch workloads that run to completion (Jobs) or are scheduled to run periodically (CronJobs).
+    Pods
+        > The smallest deployable units in Kubernetes.
+        > representing a group of one or more containers that share storage and network.
 
+    ReplicaSets
+        > Ensure a specified number of Pod replicas are running at all times.
+    
+    Deployments
+        > Provide declarative updates for Pods and ReplicaSets, enabling rolling updates and rollbacks.
 
+    StatefulSets
+        > Manage stateful applications
+        > providing stable network identities,
+        > persistent storage, and ordered, graceful deployment and scaling.
+        > Understand the differences between Deployments and StatefulSets.
+    
+    DaemonSets
+        > Ensure that a copy of a Pod runs on all (or some specified) Nodes in the cluster 
+        > (e.g., for logging, monitoring agents).
+
+    Jobs and CronJobs
+        > Manage batch workloads that run to completion (Jobs) 
+        > or are scheduled to run periodically (CronJobs).
+
+#####################################################################
 Phase 2: Networking and Storage
 
-Kubernetes Networking:
+    Kubernetes Networking:
 
-    Pod Networking: How Pods communicate with each other. Understand the concept of a flat network.
-    Services: An abstraction that provides a stable IP address and DNS name for a set of Pods, enabling load balancing and discovery. Explore different Service types (ClusterIP, NodePort, LoadBalancer, ExternalName).
-    Network Policies: Control network traffic between Pods and other network entities using labels and selectors.
-    Ingress: Manages external access to the services within the cluster, typically by providing HTTP and HTTPS routing. Understand Ingress Controllers and Ingress resources.
-    DNS in Kubernetes: How service discovery works using the internal DNS server.
+        Pod Networking
+            > How Pods communicate with each other.
+            > Understand the concept of a flat network.
+
+        Services
+            > An abstraction that provides a stable IP address and DNS name for a set of Pods, enabling load balancing and discovery. Explore different Service types (ClusterIP, NodePort, LoadBalancer, ExternalName).
+
+        Network Policies
+            > Control network traffic between Pods and other network entities using labels and selectors.
+
+        Ingress
+            > Manages external access to the services within the cluster, typically by providing HTTP and HTTPS routing. Understand Ingress Controllers and Ingress resources.
+
+        DNS in Kubernetes
+            > How service discovery works using the internal DNS server.
     
-Kubernetes Storage:
+    Kubernetes Storage:
 
-    Volumes: Understand the basic concept of volumes for providing storage to containers within a Pod.
-    Persistent Volumes (PVs): Provisioned storage in the cluster that exists independently of Pods.
-    Persistent Volume Claims (PVCs): Requests for storage by users, which Kubernetes matches to available PVs.
-    Storage Classes: Enable dynamic provisioning of PVs based on defined storage characteristics.
-    Access Modes: Understand ReadWriteOnce, ReadOnlyMany, and ReadWriteMany.
-    Volume Types: Explore different types of volumes (e.g., emptyDir, hostPath, nfs, cloud provider volumes, csi).
+        Volumes
+            > Understand the basic concept of volumes for providing storage to containers within a Pod.
+
+            Persistent Volumes (PVs)
+                > Provisioned storage in the cluster that exists independently of Pods.
+
+            Persistent Volume Claims (PVCs)
+                > Requests for storage by users, which Kubernetes matches to available PVs.
+
+            Storage Classes
+                > Enable dynamic provisioning of PVs based on defined storage characteristics.
+
+            Access Modes
+                > Understand ReadWriteOnce, ReadOnlyMany, and ReadWriteMany.
+            
+            Volume Types
+                > Explore different types of volumes (e.g., emptyDir, hostPath, nfs, cloud provider volumes, csi).
 
 
+#####################################################################
 Phase 3: Configuration and Management
 
 Configuration:

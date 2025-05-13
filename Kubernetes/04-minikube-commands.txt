@@ -22,6 +22,9 @@ Start a second local cluster (note: This will not work if minikube is using the 
 Start a cluster with 2 nodes in the driver of your choice:
     $ minikube start --nodes 2 -p multinode-demo
 
+Start Minikube with the Podman Driver:
+    $ minikube start --driver=podman
+
 Stop your local cluster:
     $ minikube stop
 

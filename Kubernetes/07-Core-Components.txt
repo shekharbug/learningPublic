@@ -1,0 +1,38 @@
+#####################################################################
+filename  : 07-Core-Components.txt
+Author    : Shekhar
+Created   : 13-May-2025
+Version   : 1.0
+Description: Core Components of kubernetes
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. Node.txt 
+2. 
+#####################################################################
+Node.txt
+#########
+
+Nodes
+    > A node may be a virtual or physical machine, depending on the cluster.
+    > The primary purpose of a node is to run your applications, which are packaged as containers inside Pods.
+    > Each node is managed by the control plane 
+
+
+Types of Nodes:
+    
+    Worker Nodes
+        > These nodes primarily run your application workloads (Pods). 
+        > They host the necessary services to be managed by the control plane and to run containers.
+        > In production environments, you typically have multiple worker nodes.
+
+    Master Nodes (Control Plane Nodes)
+        > These nodes host the core components of the Kubernetes control plane,
+        > manages the entire cluster, these components include the API server, etcd, scheduler, and controller manager. 
+        > While it's possible for master nodes to also run workloads in single-node clusters (like Minikube by default), 
+
+
+#####################################################################
