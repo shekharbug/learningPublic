@@ -1,19 +1,22 @@
-# Creation Date: 02-May-2025
-# Owner  :  Shekhar
-# Updated Date:
-# Description:
-    => Learning kubernetes
+#####################################################################
+filename  : 03-installation-kubernetes.txt
+Author    : Shekhar
+Created   : 02-May-2025
+Version   : 1.0
+Description: kubernetes installation steps
+Reference Link:   https://kubernetes.io/docs/home/
+History   : 
+#####################################################################
 
-
-Source : https://kubernetes.io/docs/home/
-
-########################################################
+#####################################################################
 Index:
   1. kubectl.txt # installation of kubectl 
   2. minikube.txt # installation of minikube 
   3. Vagrant.txt # installation of Vagrant 
+  4. kubeadm.txt # installation using kubeadm
+#####################################################################
 
-########################################################
+
 Installation.txt
 #################
 
@@ -154,5 +157,160 @@ Manage the VMs:
     $ sudo su 
 #####################################################################
 
+kubeadm.txt:
+#############
+Reference Link: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/install-kubeadm/
+
+1) Minmum Requirements:
+    RAM: 2GB
+    CPU: 2 for controlplane
+    Unique hostname, MAC address, and product_uuid for every node
+
+2) Verify the MAC address and product_uuid are unique for every node
+    => ip link
+    => ifconfig -a
+
+    > product_uuid 
+        => sudo cat /sys/class/dmi/id/product_uuid
+
+3) Check required ports
+    > https://kubernetes.io/docs/reference/networking/ports-and-protocols/
+
+        => nc 127.0.0.1 6443 -zv -w 2
+   
+    Port    : Service
+    6443    :   Kubernetes API server
+    10250   :   Kubelet API	Self, Control plane
+    10259   :   kube-scheduler
+    10257   :   kube-controller-manager
+    2379-2380   :   etcd server client API	kube-apiserver, etcd
+
+4) Swap configuration
+    > The default behavior of a kubelet is to fail to start if swap memory is detected on a node.
+    > This means that swap should either be disabled or tolerated by kubelet.
+
+    To tolerate swap: add failSwapOn: false to kubelet configuration
+    To disable swap: sudo swapoff -a .
+        > make sure swap is disabled in config files like /etc/fstab, systemd.swap
+
+5) Installing a container runtime
+    link: https://kubernetes.io/docs/setup/production-environment/container-runtimes/
+
+    5.1) Enable IPv4 packet forwarding
+
+        # sysctl params required by setup, params persist across reboots
+        cat <<EOF | sudo tee /etc/sysctl.d/k8s.conf
+        net.ipv4.ip_forward = 1
+        EOF
+
+        # Apply sysctl params without reboot
+            => sudo sysctl --system
+
+        Verify that net.ipv4.ip_forward is set to 1 with:
+            => sysctl net.ipv4.ip_forward
+
+   5.2) Install containerd
+        link: https://docs.docker.com/engine/install/ubuntu/
+        
+        # Add Docker's official GPG key:
+        sudo apt-get update
+        sudo apt-get install ca-certificates curl
+        sudo install -m 0755 -d /etc/apt/keyrings
+        sudo curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+        sudo chmod a+r /etc/apt/keyrings/docker.asc
+
+        # Add the repository to Apt sources:
+        echo \
+        "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu \
+        $(. /etc/os-release && echo "${UBUNTU_CODENAME:-$VERSION_CODENAME}") stable" | \
+        sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update
+
+        sudo apt-get install containerd.io
+        systemctl status containerd
+
+
+    5.3) cgroup drivers
+
+        There are two cgroup drivers available:
+        cgroupfs
+        systemd
+
+        5.2.1) systemd cgroup driver
+            > check existing init system:
+                => ps -p 1
+
+            > To set systemd as the cgroup driver, edit the KubeletConfiguration option of cgroupDriver and set it to systemd. For example:
+
+            cat /etc/containerd/config.toml
+            ====================================
+            apiVersion: kubelet.config.k8s.io/v1beta1
+            kind: KubeletConfiguration
+            cgroupDriver: systemd
+            ====================================
+
+            > restart containerd 
+                => sudo systemctl restart containerd
+
+6) Installing kubeadm, kubelet and kubectl
+
+    sudo apt-get update
+    # apt-transport-https may be a dummy package; if so, you can skip that package
+    sudo apt-get install -y apt-transport-https ca-certificates curl gpg
+
+    # If the directory `/etc/apt/keyrings` does not exist, it should be created before the curl command, read the note below.
+    # sudo mkdir -p -m 755 /etc/apt/keyrings
+    curl -fsSL https://pkgs.k8s.io/core:/stable:/v1.33/deb/Release.key | sudo gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+
+    # This overwrites any existing configuration in /etc/apt/sources.list.d/kubernetes.list
+    echo 'deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.gpg] https://pkgs.k8s.io/core:/stable:/v1.33/deb/ /' | sudo tee /etc/apt/sources.list.d/kubernetes.list
+
+
+    sudo apt-get update
+    sudo apt-get install -y kubelet kubeadm kubectl
+    sudo apt-mark hold kubelet kubeadm kubectl
+
+    (Optional) Enable the kubelet service:
+    sudo systemctl enable --now kubelet
+
+7) Creating a cluster with kubeadm
+    link: https://kubernetes.io/docs/setup/production-environment/tools/kubeadm/create-cluster-kubeadm/
+
+    7.1) find a usable IP on the network interfaces associated with a default gateway on a host
+        => ip route show 
+            # Look for a line starting with "default via"
+
+    7.2) Initializing your control-plane node # only control node 
+        => sudo kubeadm init --pod-network-cidr=10.244.0.0/16 --apiserver-advertise-address=192.168.56.2
+
+    7.3) To start using your cluster, you need to run the following as a regular user:
+
+        => mkdir -p $HOME/.kube
+        => sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+        => sudo chown $(id -u):$(id -g) $HOME/.kube/config
+        => kubectl get pods
+
+    Alternatively, if you are the root user, you can run:
+        => export KUBECONFIG=/etc/kubernetes/admin.conf
+
+    7.4) Installing Addons
+        link : https://kubernetes.io/docs/concepts/cluster-administration/addons/
+        Weave Net:
+            > provides networking and network policy, will carry on working on both sides of a network partition
+            > does not require an external database
+            link: https://github.com/rajch/weave#using-weave-on-kubernetes
+
+            => kubectl apply -f https://reweave.azurewebsites.net/k8s/v1.29/net.yaml
+
+        kubectl get ds -A
+        kubectl edit ds weave-net -n kube-system
+            > Add environment
+                - name: IPALLOC_RANGE
+                  value: 10.244.0.0./16
+
+    7.5) Join to worker node:
+        You can now join any number of machines by running the following on each node as root:
+        => sudo  kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
 ########################################################
 ########################################################

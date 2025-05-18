@@ -40,6 +40,10 @@ kubectl get: List resources.
     kubectl get <resource_type> -o wide: Show more details, like node and IP addresses.
     kubectl get <resource_type> -l <label_key>=<label_value>: List resources with a specific label.
 
+kubectl api-resources: Lists the API resources supported by the server.
+kubectl api-versions: Lists the API versions supported by the server.
+
+
 kubectl describe: Show detailed information about a resource.
     => kubectl get <resource_type> [<resource_name> -n <namespaces>]
 
