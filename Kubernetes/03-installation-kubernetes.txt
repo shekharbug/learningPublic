@@ -312,5 +312,5 @@ Reference Link: https://kubernetes.io/docs/setup/production-environment/tools/ku
     7.5) Join to worker node:
         You can now join any number of machines by running the following on each node as root:
         => sudo  kubeadm join <control-plane-host>:<control-plane-port> --token <token> --discovery-token-ca-cert-hash sha256:<hash>
-########################################################
-########################################################
+#####################################################################
+
