@@ -1,0 +1,36 @@
+#####################################################################
+filename  : 00-installation.txt
+Author    : Shekhar
+Created   : 21-May-2025
+Version   : 1.0
+Description: flask installation information
+Reference Link:  https://flask.palletsprojects.com/en/stable/installation/#virtual-environments
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. installation.txt
+2. 
+#####################################################################
+installation.txt
+################
+
+Flask installation on python virtual environment.
+
+1. create python virtual environment.
+    => python3 -m venv .venv
+    => source .venv/bin/activate
+
+2. Install Flask 
+    => pip install flask
+    => pip freeze
+        blinker==1.9.0
+        click==8.2.1
+        Flask==3.1.1  ===> flask and other dependencies
+        itsdangerous==2.2.0
+        Jinja2==3.1.6
+        MarkupSafe==3.0.2
+        Werkzeug==3.1.3
+
+#####################################################################

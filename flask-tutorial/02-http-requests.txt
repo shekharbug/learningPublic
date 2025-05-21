@@ -1,0 +1,42 @@
+#####################################################################
+filename  : 02-http-requests.txt
+Author    : Shekhar
+Created   : 21-May-2025
+Version   : 1.0
+Description: 
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. HTTP Methods
+2. 
+#####################################################################
+HTTP Methods
+
+> By default, a route only answers to GET requests.
+> You can use the methods argument of the route() decorator to handle different HTTP methods.
+
+from flask import request
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        return do_the_login()
+    else:
+        return show_the_login_form()
+
+> You can also separate views for different methods into different functions. 
+> Flask provides a shortcut for decorating such routes with get(), post(), etc. for each common HTTP method.
+
+@app.get('/login')
+def login_get():
+    return show_the_login_form()
+
+@app.post('/login')
+def login_post():
+    return do_the_login()
+
+
+#####################################################################
