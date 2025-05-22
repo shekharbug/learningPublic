@@ -3,21 +3,8 @@ import os # For generating a secret key
 from db.dbOps import dbOps
 
 app = Flask(__name__)
-
-# --- IMPORTANT FOR PRODUCTION ---
-# In a real application, get this from an environment variable or a config file.
-# For demonstration, we'll generate one, but it should be a long, random string.
 app.secret_key = os.urandom(24) 
-# --- END IMPORTANT ---
-
-
-# Dummy user data for demonstration purposes.
-# In a real application, you would use a database and securely hash passwords (e.g., using Flask-Bcrypt or Werkzeug's security module).
-USERS = {
-    "john.doe": "password123",
-    "alice.smith": "securepass",
-    "admin": "admin123"
-}
+USERS = {"admin": "admin123"}
 
 @app.route('/')
 def index():
@@ -33,10 +20,9 @@ def login():
         return redirect(url_for('dashboard'))
 
     if request.method == 'POST':
-        print(request.form)
         username = request.form.get('username') # Use .get() for safer access
         password = request.form.get('password')
-        print(f'{username} {password}')
+        print(f'{username}')
 
         # Basic credential validation
         if username in USERS and USERS[username] == password:
@@ -69,7 +55,6 @@ def dashboard():
 @app.route('/logout')
 def logout():
     # Remove username from session
-    print(session)
     session.pop('username', None)
     flash('You have been logged out.', 'info')
     return redirect(url_for('login'))
@@ -105,4 +90,4 @@ if __name__ == '__main__':
     dbuser = dbOps()
     # Debug mode is great for development (auto-reloads, debugger)
     # Never use debug=True in a production environment!
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')

@@ -15,31 +15,29 @@ class dbOps:
             self.dbname = 'my_app_db'
         if not dbpass:
             self.dbpass = 'app_password'
-        self._db_connect()
 
-    def _db_connect(self):
-        self.connection = connector.connect(
+    def __db_connect(self):
+        connection = connector.connect(
             host = self.dbhost,
             database = self.dbname,
             user = self.dbuser,
             password = self.dbpass,
             port = self.dbport
         )
-        self.sqlcursor = self.connection.cursor()
-        # return sqlcursor
+        return connection
     
-
     def db_connection_close(self):
         self.connection.close()
 
     def run_sql(self, sqlsmt, commit=False, output=False):
-        self.sqlcursor.execute(sqlsmt)
-        output = self.sqlcursor.fetchall()
-        if output:
-            print(output)
-        if commit:
-            self.connection.commit()
-            return True
+        with self.__db_connect() as connection:
+            if connection and connection.is_connected():
+                sqlcursor = connection.cursor()
+                sqlcursor.execute(sqlsmt)
+            if commit:
+                connection.commit()
+                return True
+            output = sqlcursor.fetchall()
         return output
 
     def is_user_exists(self, username):
@@ -73,6 +71,3 @@ class dbOps:
         sqlsmt = "select id, name, email from users"
         return self.run_sql(sqlsmt, output=True) 
     
-
-
-
