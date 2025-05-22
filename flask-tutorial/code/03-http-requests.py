@@ -8,15 +8,20 @@ app = Flask(__name__)
 def index():
     return "This is main page"
 
-@app.route('/users/<username>', methods=['GET', 'POST'])
-def get_user_info(username):
-    return user_info(username)
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    print(request.method)
+    if request.method == 'POST':
+        return do_the_login()
+    else:
+        return show_the_login_form()
+    # return "helping for login"
 
-def user_info(username):
-    current_date = datetime.now()
-    print(f'{username} current date: {current_date}')
-    time.sleep(2)
-    return redirect(url_for('index'))
+def show_the_login_form():
+    return 'Show login form'
+
+def do_the_login():
+    return 'posting username and password'
 
 
 if __name__ == '__main__':
