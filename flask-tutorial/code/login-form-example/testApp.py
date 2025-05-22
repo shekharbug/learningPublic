@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+#####################################################################
+# filename  : testApp.py
+# Author    : Shekhar
+# Created   : 22-May-2025
+# Version   : 1.0
+# Description: 
+# Reference Link: 
+# History   : 
+#####################################################################
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 import os # For generating a secret key
 from db.dbOps import dbOps
@@ -88,6 +98,4 @@ def delete_user():
 
 if __name__ == '__main__':
     dbuser = dbOps()
-    # Debug mode is great for development (auto-reloads, debugger)
-    # Never use debug=True in a production environment!
     app.run(debug=True, host='0.0.0.0')
