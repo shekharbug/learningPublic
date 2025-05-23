@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask-app-deployment
+  labels:
+    app: flask-app
+spec:
+  replicas: 1 # You can scale this up later
+  selector:
+    matchLabels:
+      app: flask-app
+  template:
+    metadata:
+      labels:
+        app: flask-app
+    spec:
+      containers:
+      - name: flask-app
+        image: flask-testapp:latest # REPLACE with your pushed image
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 5000
+        env:
+        - name: MYSQL_HOST
+          value: "mysql" # Matches the MySQL Service name
+        - name: MYSQL_DATABASE
+          value: "my_app_db"
+        - name: MYSQL_USER
+          value: "app_user" # MySQL root user (as set in mysql-deployment)
+        - name: MYSQL_ROOT_PASSWORD # Name for the Flask app to read the password
+          value: "app_password"
+        - name: MYSQL_PASSWORD
+          value: "app_password"
+        - name: SECRET_KEY # Flask app's secret key for sessions
+          value: "mysecretkey"

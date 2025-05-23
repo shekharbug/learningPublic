@@ -10,9 +10,12 @@ History   :
 
 #####################################################################
 Index
-1. 
-2. 
+1.  Deploy simple application with db
+2.  Deploy application with db
 #####################################################################
+Deploy simple application with db
+#########################
+
 Step 1 - Create a Python Application
 
 mkdir app
@@ -180,3 +183,158 @@ Stop one container:
 
 
 ==> Application will be accessible.
+#####################################################################
+#####################################################################
+#####################################################################
+Deploy application with db
+########################
+
+
+1) Create flas application.
+    > Created and placed under flask-tutorial/code/login-form-example
+
+=====================================================================
+2) Create requirements file.
+   
+    $ cat requirements.txt
+    Flask
+    mysql-connector-python
+
+=====================================================================
+3) Create Docker file.
+
+cd flask-tutorial/code/login-form-example
+
+$ cat Dockerfile
+# Use a lightweight official Python image
+FROM python:3.12-slim
+
+# Set the working directory in the container
+WORKDIR /app
+
+# Copy the requirements file and install dependencies
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy the rest of the application code
+COPY . /app
+
+# Expose the port the Flask app will run on
+EXPOSE 5000
+
+# Command to run the application using Gunicorn (production-ready WSGI server)
+CMD ["python3", "/app/testApp.py"]
+
+=====================================================================
+
+4) Create container
+
+    $ ls -lrt
+    total 4
+    drwxrwxrwx 1 oracle oracle 4096 May 22 13:57 templates
+    -rwxrwxrwx 1 oracle oracle 3465 May 22 15:04 testApp.py
+    drwxrwxrwx 1 oracle oracle 4096 May 22 15:07 db
+    -rwxrwxrwx 1 oracle oracle   29 May 22 15:09 requirements.txt
+    -rwxrwxrwx 1 oracle oracle  478 May 22 15:15 Dockerfile
+
+
+docker build -t flask-testapp:latest .
+
+Load the Image into Minikube:
+    $ minikube image load flask-testapp:latest
+
+=====================================================================
+5) MySQL Database Initialization (ConfigMap):
+
+This script will be executed when the MySQL container starts to create the database and the users table.
+    flask-mysql/mysql-init-configmap.yaml
+=====================================================================
+
+6)  MySQL Persistent Volume Claim (PVC):
+
+This requests storage for MySQL data. Ensure your Kubernetes cluster has a default StorageClass or define one.
+    flask-mysql/mysql-pvc.yaml
+
+    => kubectl get storageclass
+    => kubectl get pv
+
+=====================================================================
+
+7) MySQL Deployment (StatefulSet):
+
+This creates the MySQL database pod(s). We use a StatefulSet for data persistence and a stable network identity.
+    flask-mysql/mysql-deployment.yaml
+
+    => kubectl get pod
+        NAME      READY   STATUS    RESTARTS   AGE
+        mysql-0   1/1     Running   0          4m2s
+
+
+=====================================================================
+8) MySQL Service:
+
+This exposes the MySQL database within the Kubernetes cluster, allowing the Flask app to connect to it using its service name (mysql).
+
+    flask-mysql/mysql-service.yaml
+
+    => kubectl get service
+        NAME         TYPE        CLUSTER-IP   EXTERNAL-IP   PORT(S)    AGE
+        mysql        ClusterIP   None         <none>        3306/TCP   5s
+
+
+=====================================================================
+9) Flask Application Deployment:
+
+This deploys your Flask application container(s) and provides it with the necessary database connection details.
+
+    flask-mysql/flask-deployment.yaml
+
+    =>  kubectl get deployments         
+        NAME                   READY   UP-TO-DATE   AVAILABLE   AGE
+        flask-app-deployment   1/1     1            1           85s
+
+=====================================================================
+10) Flask Application Service:
+
+This exposes your Flask application to the outside world (or within the cluster).
+
+   flask-mysql/flask-service.yaml
+
+   =>  kubectl get services
+        NAME                TYPE           CLUSTER-IP       EXTERNAL-IP   PORT(S)        AGE
+        flask-app-service   LoadBalancer   10.100.139.247   <pending>     80:32459/TCP   12s
+        mysql               ClusterIP      None             <none>        3306/TCP       9m48s
+
+=====================================================================
+
+11) Deploy MySQL components:
+
+    kubectl apply -f flask-mysql/mysql-init-configmap.yaml
+    kubectl apply -f flask-mysql/mysql-pvc.yaml
+    kubectl apply -f flask-mysql/mysql-deployment.yaml
+    kubectl apply -f flask-mysql/mysql-service.yaml
+
+    kubectl get pod -l app=mysql
+=====================================================================
+
+12) Deploy Flask application components:
+
+    kubectl apply -f flask-mysql/flask-deployment.yaml
+    kubectl apply -f flask-mysql/flask-service.yaml
+
+    kubectl get pod -l app=flask-app
+    kubectl get svc flask-app-service
+
+=====================================================================
+13) port forwarding:
+
+    => kubectl port-forward service/flask-app-service 7080:80
+
+    Access application via : http://127.0.0.1:7080
+#####################################################################
+Tips:
+connect to mysql database:
+
+    => kubectl exec -it mysql-0 -- /bin/bash
+        bash-5.1# mysql -u app_user -p my_app_db
+            > app_password

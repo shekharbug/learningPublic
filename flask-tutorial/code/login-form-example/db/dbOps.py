@@ -12,20 +12,21 @@
 from datetime import datetime
 import mysql.connector as connector
 from mysql.connector import Error
+import os
 
 class dbOps:
 
     def __init__(self, dbname=None, dbhost=None, dbport=None, dbuser=None, dbpass=None):
         if not dbhost:
-            self.dbhost = 'localhost'
+            self.dbhost = os.environ.get('MYSQL_HOST', 'localhost')
         if not dbport:
-            self.dbport = 3306
+            self.dbport = os.environ.get('MYSQL_PORT', '3306')
         if not dbuser:
-            self.dbuser = 'app_user'
+            self.dbuser = os.environ.get('MYSQL_USER', 'app_user')
         if not dbname:
-            self.dbname = 'my_app_db'
+            self.dbname = os.environ.get('MYSQL_DATABASE', 'my_app_db')
         if not dbpass:
-            self.dbpass = 'app_password'
+            self.dbpass = os.environ.get('MYSQL_PASSWORD', 'app_password')
 
     def __db_connect(self):
         connection = connector.connect(

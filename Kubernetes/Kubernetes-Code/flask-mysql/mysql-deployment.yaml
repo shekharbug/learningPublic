@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: mysql
+spec:
+  selector:
+    matchLabels:
+      app: mysql
+  serviceName: mysql 
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:8.0 # Use a specific version
+        ports:
+        - containerPort: 3306
+        env:
+        - name: MYSQL_DATABASE
+          value: "my_app_db"
+        - name: MYSQL_USER
+          value: "app_user" # MySQL root user (as set in mysql-deployment)
+        - name: MYSQL_ROOT_PASSWORD # Name for the Flask app to read the password
+          value: "app_password"
+        - name: MYSQL_PASSWORD
+          value: "app_password"
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql # Default MySQL data directory
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d # MySQL init script directory
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pvc
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-config
+  volumeClaimTemplates: [] 
