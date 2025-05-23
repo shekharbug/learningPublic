@@ -332,6 +332,13 @@ This exposes your Flask application to the outside world (or within the cluster)
 
     Access application via : http://127.0.0.1:7080
 #####################################################################
+Tunnel:
+    $ minikube tunnel
+
+    => minikube service flask-app-service --url
+
+
+
 Tips:
 connect to mysql database:
 
