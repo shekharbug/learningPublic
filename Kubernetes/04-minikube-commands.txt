@@ -95,5 +95,7 @@ minikube mount <host_path>:<guest_path>:
     > Mounts a directory from your host machine into the Minikube VM, making it accessible to your pods.
     => minikube mount /path/on/host:/path/in/minikube
     
+login to minikube:
+    => minikube ssh
 
 #####################################################################

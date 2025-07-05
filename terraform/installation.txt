@@ -1,0 +1,38 @@
+#####################################################################
+filename  : installation.txt
+Author    : Shekhar
+Created   : 03-Jul-2025
+Version   : 1.0
+Description: installation of terraform
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. installation in ubuntu
+2. 
+#####################################################################
+1. installation in ubuntu
+##########################
+1) Install necessary dependencies:
+    sudo apt install -y software-properties-common gnupg curl
+
+2) Add HashiCorp GPG key:
+    curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+
+3) Add HashiCorp repository:
+    echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+
+4) Update package list again:
+    sudo apt update
+
+5) Install Terraform:
+     sudo apt install -y terraform
+
+$ terraform -v
+Terraform v1.12.2
+on linux_amd64
+
+
+#####################################################################

@@ -1,0 +1,194 @@
+#####################################################################
+filename  : 04-dataSource.txt
+Author    : Shekhar
+Created   : 05-Jul-2025
+Version   : 1.0
+Description: Data Source information
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+In Terraform, a data source is a way to fetch and use information about existing infrastructure or external services. 
+Unlike resources, which define and manage infrastructure, data sources are read-only and allow you to bring external data into your Terraform configuration.
+
+
+#####################################################################
+What are Data Sources?
+A data source queries a specific API (like AWS, Azure, GCP, or even a local file) to retrieve information. This information is then exposed as attributes that you can reference within your Terraform configuration.
+
+Why are Data Sources Useful?
+    Data sources are incredibly powerful and are used in many scenarios:
+
+Referencing Existing Infrastructure:
+    Pre-existing VPCs, Subnets, Security Groups: 
+        > If you have an existing network infrastructure that was not created by your current Terraform configuration (or was created by a different configuration), 
+        > you can use data sources to find their IDs and other attributes to deploy new resources into them.
+
+    Existing AMIs/Machine Images:
+        > Instead of hardcoding an AMI ID (which changes frequently),
+        > you can use a data source to look up the latest Amazon Machine Image for a specific operating system.
+
+    Shared Resources:
+        > When multiple Terraform configurations need to interact with the same shared resources (e.g., a shared S3 bucket, a common database), data sources provide a way to reference them without recreating them.
+
+Getting Information from External Systems:
+    DNS Records: Fetching DNS records from a DNS provider.
+    
+    User/Group Information: Retrieving details about users or groups from identity providers like AWS IAM or Azure AD.
+    
+    Kubernetes Cluster Details: Getting connection information for an existing Kubernetes cluster.
+#####################################################################
+
+Syntax:
+
+data "<PROVIDER>_<TYPE>" "<NAME>" {
+  # Arguments specific to the data source
+  # These arguments define what data to look up
+}
+
+<PROVIDER>: The name of the Terraform provider (e.g., aws, azurerm, google).
+
+<TYPE>: The type of data source within that provider (e.g., vpc, ami, resource_group).
+
+<NAME>: A local name you give to this data source instance, which you'll use to reference its attributes.
+
+you can access its attributes using the syntax data.<PROVIDER>_<TYPE>.<NAME>.<ATTRIBUTE>.
+
+#####################################################################
+
+# Define an AWS provider block
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Data source to find the latest Ubuntu 22.04 LTS AMI
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical's AWS account ID for Ubuntu AMIs
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+# Resource to launch an EC2 instance using the retrieved AMI ID
+resource "aws_instance" "web_server" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  tags = {
+    Name = "MyWebServer"
+  }
+}
+
+#####################################################################
+
+In Terraform, a data source is a way to fetch and use information about existing infrastructure or external services. Unlike resources, which define and manage infrastructure, data sources are read-only and allow you to bring external data into your Terraform configuration.
+
+Here's a breakdown of what data sources are, why they're useful, and how they work:
+
+What are Data Sources?
+A data source queries a specific API (like AWS, Azure, GCP, or even a local file) to retrieve information. This information is then exposed as attributes that you can reference within your Terraform configuration.
+
+Think of them as "lookups." You're telling Terraform, "Go get me the details of this existing thing," and then you can use those details to configure other resources or make decisions.
+
+Why are Data Sources Useful?
+Data sources are incredibly powerful and are used in many scenarios:
+
+Referencing Existing Infrastructure:
+
+Pre-existing VPCs, Subnets, Security Groups: If you have an existing network infrastructure that was not created by your current Terraform configuration (or was created by a different configuration), you can use data sources to find their IDs and other attributes to deploy new resources into them.
+
+Existing AMIs/Machine Images: Instead of hardcoding an AMI ID (which changes frequently), you can use a data source to look up the latest Amazon Machine Image for a specific operating system.
+
+Shared Resources: When multiple Terraform configurations need to interact with the same shared resources (e.g., a shared S3 bucket, a common database), data sources provide a way to reference them without recreating them.
+
+Getting Information from External Systems:
+
+DNS Records: Fetching DNS records from a DNS provider.
+
+User/Group Information: Retrieving details about users or groups from identity providers like AWS IAM or Azure AD.
+
+Kubernetes Cluster Details: Getting connection information for an existing Kubernetes cluster.
+
+Dynamic Configuration:
+
+Using data sources allows your Terraform configurations to be more dynamic and less reliant on hardcoded values. If an ID or attribute changes in the underlying infrastructure, your Terraform configuration will automatically pick up the new value the next time it runs.
+
+Avoiding Duplication:
+
+Instead of having multiple configurations define the same resource, one configuration can create it, and others can use data sources to reference it.
+
+How Data Sources Work
+The general syntax for a data source block is:
+
+Terraform
+
+data "<PROVIDER>_<TYPE>" "<NAME>" {
+  # Arguments specific to the data source
+  # These arguments define what data to look up
+}
+<PROVIDER>: The name of the Terraform provider (e.g., aws, azurerm, google).
+
+<TYPE>: The type of data source within that provider (e.g., vpc, ami, resource_group).
+
+<NAME>: A local name you give to this data source instance, which you'll use to reference its attributes.
+
+Once the data source is defined, you can access its attributes using the syntax data.<PROVIDER>_<TYPE>.<NAME>.<ATTRIBUTE>.
+
+Example (AWS): Getting the Latest Ubuntu AMI
+Let's say you want to launch an EC2 instance using the latest Ubuntu Server AMI. Instead of manually finding the AMI ID, you can use the aws_ami data source:
+
+Terraform
+
+# Define an AWS provider block
+provider "aws" {
+  region = "us-east-1"
+}
+
+# Data source to find the latest Ubuntu 22.04 LTS AMI
+data "aws_ami" "ubuntu" {
+  most_recent = true
+  owners      = ["099720109477"] # Canonical's AWS account ID for Ubuntu AMIs
+
+  filter {
+    name   = "name"
+    values = ["ubuntu/images/hvm-ssd/ubuntu-jammy-22.04-amd64-server-*"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
+
+# Resource to launch an EC2 instance using the retrieved AMI ID
+resource "aws_instance" "web_server" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t2.micro"
+  tags = {
+    Name = "MyWebServer"
+  }
+}
+#####################################################################
+In this example:
+
+The data "aws_ami" "ubuntu" block queries AWS for an AMI.
+
+most_recent = true ensures it picks the latest one.
+
+owners specifies Canonical's account to find official Ubuntu AMIs.
+
+filter blocks specify criteria for the AMI name and virtualization type.
+
+Finally, aws_instance.web_server uses data.aws_ami.ubuntu.id to get the ID of the found AMI, making the configuration robust to AMI updates.
