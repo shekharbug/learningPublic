@@ -1,0 +1,32 @@
+#####################################################################
+filename  : ansible-setup-on-Jenkins.txt
+Author    : Shekhar
+Created   : 11-Sep-2025
+Version   : 1.0
+Description: 
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+Pre-requisites:
+
+1) install Ansible plugin
+Jenkins (http://localhost:8080/) 
+    => Manage Jenkins > plugins > search ansible > Click checkbox of Ansible > install 
+
+2) Install ansible on jenkins host/Agent:
+    python3 -m venv venv
+    source venv/bin/activate
+    pip install ansible
+
+3) Update system configuration:
+    > Manage Jenkins > tools > Ansible installations > Add Ansible 
+
+    Name : Ansible
+    Path to ansible executables directory : /mnt/c/shekhar/pCode/venv/bin
+#####################################################################

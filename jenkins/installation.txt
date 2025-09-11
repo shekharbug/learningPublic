@@ -1,7 +1,7 @@
 Date : 31-Jan-2025
 Owner: shekhar
 Version: 1.0
-update date:
+update date: 10-Sep-2025
 Description: Installaton of jenkins
 
 Links:
@@ -10,6 +10,7 @@ https://www.jenkins.io/doc/book/installing/
 Index:
 1. Docker
 2. Post-installation setup wizard
+3. installation on ubuntu
 ###########################################################
 Downloading and running Jenkins in Docker
 
@@ -124,5 +125,38 @@ http://localhost:8080 => enter password => install suggested plugin
 
 
 ###########################################################
+Installation on ubuntu:
+  link: https://www.jenkins.io/doc/book/installing/linux/
+
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+
+
+
+###########################################################
+
+Start the Jenkins Service
+  $ sudo systemctl start jenkins
+
+Enable Jenkins to Start at Boot
+  $ sudo systemctl enable jenkins
+
+Check the Status of Jenkins
+  $ sudo systemctl status jenkins
+
+Restart jenkins:
+  $ sudo systemctl restart jenkins
+
+
+Access Jenkins
+By default, Jenkins runs on port 8080. Open your browser and navigate to:
+
+http://localhost:8080
+
 
 ###########################################################

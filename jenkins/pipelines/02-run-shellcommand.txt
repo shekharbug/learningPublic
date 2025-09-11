@@ -1,0 +1,16 @@
+pipeline{
+    agent any
+    stages {
+        stage('Test'){
+            steps{
+                sh '''echo "This is first script"
+for x in $(seq 1 2)
+do
+echo ${x}
+done
+
+'''
+            }
+        }
+    }
+}
