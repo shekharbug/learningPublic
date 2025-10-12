@@ -1,0 +1,42 @@
+//#####################################################################
+filename  : initial_setup.txt
+Author    : Shekhar
+Created   : 10-Oct-2025
+Version   : 1.0
+Description: inital setup for AI
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1.install jupyter
+2. 
+#####################################################################
+
+# installation of Jupiter
+
+python3 -m venv pyvenv
+source pyvenv/bin/activate
+
+2) Install Jupiter notebook on virtual env:
+pip install jupyter
+pip freeze # view all jupyter has installed on virtual environment
+
+3) Add a new kernel to your Jupyter config
+
+ipython kernel install --user --name=pyvenv
+Note: pyvenv : python virtual env that we have created earlier.
+
+cmahto@cmahto-mac ~ % source pyvenv/bin/activate
+(pyvenv) cmahto@cmahto-mac ~ % ipython kernel install --user --name=pyvenv
+0.00s - Debugger warning: It seems that frozen modules are being used, which may
+0.00s - make the debugger miss breakpoints. Please pass -Xfrozen_modules=off
+0.00s - to python to disable frozen modules.
+0.00s - Note: Debugging will proceed. Set PYDEVD_DISABLE_FILE_VALIDATION=1 to disable this validation.
+Installed kernelspec pyvenv in /Users/cmahto/Library/Jupyter/kernels/pyvenv
+(pyvenv) cmahto@cmahto-mac ~ %
+
+4) Open jupyter notebook from virtual environment:
+jupyter-notebook
+#####################################################################
