@@ -1,0 +1,40 @@
+#####################################################################
+filename  : iniital_setup_grafana.txt
+Author    : Shekhar
+Created   : 14-Oct-2025
+Version   : 1.0
+Description: installation of grafana
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. Linux (Systemd-based):
+2. Docker
+#####################################################################
+1. Linux (Systemd-based):
+
+sudo systemctl daemon-reload
+sudo systemctl start grafana-server
+# To check status:
+# sudo systemctl status grafana-server
+#####################################################################
+
+Docker:
+
+docker run -d --name=grafana -p 3000:3000 grafana/grafana
+
+1. Access the Web Interface
+    URL: http://localhost:3000
+
+#####################################################################
+Initial Login
+When you reach the login page, use the default administrator credentials:
+
+Field	Default Value
+Username	admin
+Password	admin
+
+#####################################################################
+
