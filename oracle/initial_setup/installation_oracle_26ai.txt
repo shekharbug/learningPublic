@@ -1,0 +1,93 @@
+#####################################################################
+filename  : installation_oracle_26ai.txt
+Author    : Shekhar
+Created   : 27-Nov-2025
+Version   : 1.0
+Description: Installation guide of oracle database 26ai 
+Reference Link: 
+History   : 
+#####################################################################
+
+#####################################################################
+Index
+1. 
+2. 
+#####################################################################
+#####################################################################
+
+
+Step 1) install preinstall:
+
+sudo dnf -y install oracle-ai-database-preinstall-26ai
+
+=================================================================
+Step 2) download oracle 26ai free rpm 
+wget https://download.oracle.com/otn-pub/otn_software/db-free/oracle-ai-database-free-26ai-23.26.0-1.el8.x86_64.rpm
+
+=================================================================
+Step 3) Change configuration based on your need:
+
+[testuser@vnic-kubectl package]$ grep -v ^# /etc/sysconfig/oracle-free-26ai.conf
+LISTENER_PORT=1521
+CHARSET=AL32UTF8
+DBFILE_DEST=/u01/oracle/db/oradata
+DB_DOMAIN=demo.com
+CONFIGURE_TDE=false
+ENCRYPT_TABLESPACES=
+SKIP_VALIDATIONS=false
+[testuser@vnic-kubectl package]$
+
+mkdir -p /u01/oracle/db/oradata
+=================================================================
+
+Step 4) configure database:
+
+sudo /etc/init.d/oracle-free-26ai configure
+
+
+[testuser@vnic-kubectl package]$ sudo /etc/init.d/oracle-free-26ai configure
+Specify a password to be used for database accounts. Oracle recommends that the password entered should be at least 8 characters in length, contain at least 1 uppercase character, 1 lower case character and 1 digit [0-9]. Note that the same password will be used for SYS, SYSTEM and PDBADMIN accounts:
+Confirm the password:
+Configuring Oracle Listener.
+Listener configuration succeeded.
+Configuring Oracle AI Database FREE.
+Enter SYS user password:
+*******
+Enter SYSTEM user password:
+*******
+Enter PDBADMIN User Password:
+*******
+..
+
+Database creation complete. For details check the logfiles at:
+ /opt/oracle/cfgtoollogs/dbca/FREE.
+Database Information:
+Global Database Name:FREE.demo.com
+System Identifier(SID):FREE
+Look at the log file "/opt/oracle/cfgtoollogs/dbca/FREE/FREE.log" for further details.
+
+Connect to Oracle AI Database using one of the connect strings:
+     Pluggable database: vnic-kubectl/FREEPDB1
+     Multitenant container database: vnic-kubectl
+[testuser@vnic-kubectl package]$
+
+=================================================================
+
+Step 5) Set profile for oracle user:
+
+Add below values on .bash_profile
+
+export ORACLE_SID=FREE
+export ORACLE_BASE=/opt/oracle
+export ORACLE_HOME=/opt/oracle/product/26ai/dbhomeFree
+export PATH=$PATH:$ORACLE_HOME/bin
+
+=================================================================
+Step 6) Connect to database:
+
+# lsnrctl status ==> get pdb service name and hostname from where listner is listening.
+
+sqlplus pdbadmin@localhost:1521/freepdb1.demo.com
+=================================================================
+
+
