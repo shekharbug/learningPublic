@@ -1,0 +1,15 @@
+1) Install git 
+   # sudo dnf -y install git 
+
+2) Git configuration 
+    git global user.name "testuser"
+    git global user.email "shekhar.bug@gmail.com"
+
+    Generate ssh key:
+        ssh-keygen -t ed25519 -C "shekhar.bug@gmail.com"
+
+    Copy public key and add in github 
+
+3) Clone repository:
+
+    git clone git@github.com:shekharbug/learningPublic.git
