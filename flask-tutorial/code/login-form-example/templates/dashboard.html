@@ -10,8 +10,9 @@
         <button type="submit">logout</button>
     </form>
     
-  
-    <a href="{{ url_for('adduser') }}">Go to add user</a><br>
+    <form method="GET" action="{{ url_for('adduser')}}" style="inline-size: auto;"">
+        <button type="submit">ADDUSER</button>
+    </form>
 
     
     <table border="1">

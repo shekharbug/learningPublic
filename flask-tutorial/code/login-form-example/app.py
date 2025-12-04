@@ -73,8 +73,8 @@ def updateuser():
     return render_template('dashboard.html')
 
 if __name__ == '__main__':
-    log = dbOps._set_logging()
+    log = dbOps._set_logging(loglevel=20)
     dbuser = dbOps()
     # Run the app
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
 
