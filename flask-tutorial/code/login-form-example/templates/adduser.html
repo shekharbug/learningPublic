@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>add user</title>
+    </head>
+    <body>
+        <h2>add user</h2>
+    </body>
+    <form method="POST" action="{{ url_for('adduser')}}">
+                employee id: <input type="number" name="emp_id"><br>
+                name:        <input type="text" name="emp_name"><br>
+                salary:      <input type="text" name="salary"><br>
+                join date:   <input type="text" name="join_date"><br>
+                <input type="submit" name="submit">
+    </form>
+    
+</html>

@@ -1,91 +1,34 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MySQL Data Display</title>
-    <style>
-        /* Basic CSS for table styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            background-color: #f4f4f4;
-            color: #333;
-        }
-        h1 {
-            color: #0056b3;
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        table {
-            width: 90%;
-            border-collapse: collapse;
-            margin: 0 auto 30px auto; /* Center the table */
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            background-color: #fff;
-        }
-        th, td {
-            border: 1px solid #ddd;
-            padding: 12px 15px;
-            text-align: left;
-        }
-        th {
-            background-color: #e9ecef;
-            color: #495057;
-            font-weight: bold;
-            text-transform: uppercase;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f1f1f1;
-        }
-        .no-data-message {
-            text-align: center;
-            color: #888;
-            font-style: italic;
-            margin-top: 50px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Data from MySQL Database</h1>
+<html>
+    <head>
+        <title>dashboard</title>
+    </head>
+    <body>
+        <h2>Welcome to dashboard</h2>
+    </body>
+    <form method="POST" action="{{ url_for('logout')}}" style="inline-size: auto;"">
+        <button type="submit">logout</button>
+    </form>
     
-    <div style="text-align: center; margin-bottom: 20px;">
-        <a href="{{ url_for('insert_user') }}" class="btn btn-primary">Add New User</a>
-        <a href="{{ url_for('delete_user') }}" class="btn btn-primary">Delete User</a>
-        <a href="{{ url_for('logout') }}" class="btn btn-primary">Logout</a>
-    </div>
+  
+    <a href="{{ url_for('adduser') }}">Go to add user</a><br>
 
-    {% if data %}
-        <table>
-            <thead>
-                <tr>
-                    {# These are your table headers.
-                       Adjust these to match the column names you are selecting
-                       in your SQL query in app.py. #}
-                    <!-- <th>ID</th> -->
-                    <th>Name</th>
-                    <th>Email</th>
-                    {# Add more <th> tags here if you have more columns #}
-                </tr>
-            </thead>
-            <tbody>
-                {% for row in data %}
-                    <tr>
-                        <!-- <td>{{ row[0] }}</td> -->
-                        <td>{{ row[1] }}</td>
-                        <td>{{ row[2] }}</td>
-                        {# Add more <td> tags here if you have more columns, adjusting the index #}
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        {# This message is displayed if the 'data' variable is empty or None. #}
-        <p class="no-data-message">No data found in the database for display.</p>
-    {% endif %}
-
-</body>
+    
+    <table border="1">
+        <tr>
+            <th>id</th>
+            <th>name</th>
+            <th>salary</th>
+            <th>joining_date</th>
+        </tr>
+        {% for id, name, salary, joining_date in items %}
+        <tr>
+            <td>{{id}}</td>
+            <td>{{name}}</td>
+            <td>{{salary}}</td>
+            <td>{{joining_date}}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    
 </html>
