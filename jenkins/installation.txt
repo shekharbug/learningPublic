@@ -1,0 +1,261 @@
+Date : 31-Jan-2025
+Owner: shekhar
+Version: 1.0
+update date: 10-Sep-2025
+Description: Installaton of jenkins
+
+Links:
+https://www.jenkins.io/doc/book/installing/
+
+Index:
+1. Docker
+2. Post-installation setup wizard
+3. installation on ubuntu
+###########################################################
+Downloading and running Jenkins in Docker
+
+1.1)  Create a bridge network in Docker
+$ docker network create jenkins
+$ docker network ls
+
+###########################################################
+1.2) In order to execute Docker commands inside Jenkins nodes, 
+    download and run the docker:dind Docker image using the following docker run command:
+
+image name: docker:dind
+
+docker run \
+  --name jenkins-docker \
+  --rm \
+  --detach \
+  --privileged \
+  --network jenkins \
+  --network-alias docker \
+  --env DOCKER_TLS_CERTDIR=/certs \
+  --volume jenkins-docker-certs:/certs/client \
+  --volume jenkins-data:/var/jenkins_home \
+  --publish 2376:2376 \
+  docker:dind \
+  --storage-driver overlay2
+
+$ docker container ls
+CONTAINER ID   IMAGE         COMMAND                  CREATED         STATUS         PORTS                                                 NAMES
+7e50093681fa   docker:dind   "dockerd-entrypoint.…"   3 minutes ago   Up 3 minutes   2375/tcp, 0.0.0.0:2376->2376/tcp, :::2376->2376/tcp   jenkins-docker
+
+
+###########################################################
+1.3) Customize the official Jenkins Docker image, by executing the following two steps:
+
+=> Create a Dockerfile with the following content:
+
+$ cat Dockerfile
+
+FROM jenkins/jenkins:2.479.3-jdk17
+USER root
+RUN apt-get update && apt-get install -y lsb-release
+RUN curl -fsSLo /usr/share/keyrings/docker-archive-keyring.asc \
+  https://download.docker.com/linux/debian/gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) \
+  signed-by=/usr/share/keyrings/docker-archive-keyring.asc] \
+  https://download.docker.com/linux/debian \
+  $(lsb_release -cs) stable" > /etc/apt/sources.list.d/docker.list
+RUN apt-get update && apt-get install -y docker-ce-cli
+USER jenkins
+RUN jenkins-plugin-cli --plugins "blueocean docker-workflow"
+
+=> check docker image:
+
+$ docker images
+REPOSITORY            TAG         IMAGE ID       CREATED         SIZE
+myjenkins-blueocean   2.479.3-1   1a27bf094548   2 minutes ago   798MB
+docker                dind        7a9eec921ea3   3 days ago      378MB
+
+
+=> Build a new docker image from this Dockerfile
+     assign the image a meaningful name, such as "myjenkins-blueocean:2.479.3-1":
+
+$ docker build -t myjenkins-blueocean:2.479.3-1 .
+
+###########################################################
+1.4) Run your own myjenkins-blueocean:2.479.3-1 image as a container in Docker using the following docker run command
+
+docker run \
+  --name jenkins-blueocean \
+  --restart=on-failure \
+  --detach \
+  --network jenkins \
+  --env DOCKER_HOST=tcp://docker:2376 \
+  --env DOCKER_CERT_PATH=/certs/client \
+  --env DOCKER_TLS_VERIFY=1 \
+  --publish 8080:8080 \
+  --publish 50000:50000 \
+  --volume jenkins-data:/var/jenkins_home \
+  --volume jenkins-docker-certs:/certs/client:ro \
+  myjenkins-blueocean:2.479.3-1
+
+
+Check container:
+
+$ docker container ls
+CONTAINER ID   IMAGE                           COMMAND                  CREATED              STATUS              PORTS                                                                                      NAMES
+8eacd818892b   myjenkins-blueocean:2.479.3-1   "/usr/bin/tini -- /u…"   About a minute ago   Up About a minute   0.0.0.0:8080->8080/tcp, :::8080->8080/tcp, 0.0.0.0:50000->50000/tcp, :::50000->50000/tcp   jenkins-blueocean
+7e50093681fa   docker:dind                     "dockerd-entrypoint.…"   13 minutes ago       Up 13 minutes       2375/tcp, 0.0.0.0:2376->2376/tcp, :::2376->2376/tcp                                        jenkins-docker
+
+
+
+###########################################################
+Post-installation setup wizard
+###########################################################
+
+Check password:
+
+$ docker exec -it jenkins-blueocean /bin/bash
+jenkins@8eacd818892b:/$ cat /var/jenkins_home/secrets/initialAdminPassword
+7cdf03606d9e40ff9bdd034a6d853cad
+jenkins@8eacd818892b:/$
+
+or 
+sudo docker exec jenkins-blueocean cat /var/jenkins_home/secrets/initialAdminPassword
+
+
+
+Unlocking Jenkins:
+http://localhost:8080 => enter password => install suggested plugin 
+=> Create First Admin User (provide admin user/password) => start with jenkins
+
+
+###########################################################
+Installation on ubuntu:
+  link: https://www.jenkins.io/doc/book/installing/linux/
+
+sudo wget -O /etc/apt/keyrings/jenkins-keyring.asc \
+  https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" \
+  https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+  /etc/apt/sources.list.d/jenkins.list > /dev/null
+sudo apt-get update
+sudo apt-get install jenkins
+
+
+
+###########################################################
+
+Start the Jenkins Service
+  $ sudo systemctl start jenkins
+
+Enable Jenkins to Start at Boot
+  $ sudo systemctl enable jenkins
+
+Check the Status of Jenkins
+  $ sudo systemctl status jenkins
+
+Restart jenkins:
+  $ sudo systemctl restart jenkins
+
+
+Access Jenkins
+By default, Jenkins runs on port 8080. Open your browser and navigate to:
+
+http://localhost:8080
+
+
+###########################################################
+
+
+
+i m learning jenkins. Now onwards, For all prompt, provide ste-by-step and full explanation like beginners. For each prompt provide pro tips and interview level questions. Also what next to be learn.
+
+
+
+
+
+
+Step-by-Step Explanation for Beginners
+1. The Basics (Phase 1)
+Before writing code, you must understand how Jenkins lives on a server.
+
+Installation: Learn to run Jenkins using a WAR file, as a Windows/Linux service, or (best for beginners) as a Docker container.
+
+Freestyle Jobs: This is the "old way" where you click buttons to tell Jenkins: "Pull code from Git, then run this shell command."
+
+Build Triggers: Learn how to make Jenkins start a job automatically when you push code (Webhooks) or at a specific time (Cron).
+
+2. Pipeline as Code (Phase 2)
+Professionals do not click buttons; they write scripts.
+
+The Jenkinsfile: This is a text file that stays in your GitHub repo. It contains the instructions for the build.
+
+Declarative vs. Scripted: Beginners should focus on Declarative syntax (structured with pipeline { stage { steps } }) because it is easier to read.
+
+Multibranch Pipelines: This tells Jenkins to automatically create a build pipeline for every branch (feature, develop, main) in your repository.
+
+3. Scaling and Reusability (Phase 3)
+When a company has 100+ developers, one Jenkins server isn't enough.
+
+Master-Agent (Controller-Agent): Learn how to set up "Agents" (slave machines) so the main server only manages tasks while the agents do the actual work.
+
+Shared Libraries: If you have 50 different apps that all deploy the same way, you write the deployment code once in a library and share it across all 50 Jenkinsfiles.
+
+4. The "DevOps" Professional Level (Phase 4)
+JCasC (Jenkins Configuration as Code): Defining your entire Jenkins setup (plugins, users, nodes) in a YAML file so you can recreate your server in minutes if it crashes.
+
+K8s Integration: Using Jenkins to spin up "Ephemeral Agents" (temporary containers) in Kubernetes that disappear as soon as the build is done.
+
+💡 Pro Tips
+Don't Over-Plugin: New learners often install 50 plugins. Plugins can break each other. Stick to the essentials like Git, Pipeline, Blue Ocean, and Docker.
+
+Use Blue Ocean: If the standard Jenkins UI looks ugly or confusing, install the Blue Ocean plugin. It provides a modern, visual view of your pipelines.
+
+Keep Master Clean: Never run builds on the "Master" node. Always use an Agent. This prevents Jenkins from crashing when a build consumes too much RAM.
+
+🗣️ Interview-Level Questions
+Question: Why is a Jenkinsfile preferred over a Freestyle job?
+
+Answer: A Jenkinsfile allows for "Pipeline as Code." It is version-controlled in Git, easy to audit, and allows the build process to be treated like software.
+
+Question: What is the "Poll SCM" feature, and why is it usually better to use "Webhooks" instead?
+
+Answer: Poll SCM makes Jenkins check Git every X minutes for changes (wasteful). Webhooks tell Git to notify Jenkins instantly when a change happens (efficient).
+
+Question: How do you handle a scenario where a build needs a password but you don't want it visible in the logs?
+
+Answer: Use the Credentials Binding Plugin. You store the secret in Jenkins and use the withCredentials block in your script to mask the output.
+
+🚀 What to Learn Next?
+Your very next step should be Installing Jenkins using Docker.
+
+Why? It is the fastest way to get a "disposable" environment to practice on without messing up your computer's settings.
+
+Would you like me to walk you through the commands to set up Jenkins in Docker step-by-step?
+
+
+
+
+### Step-by-Step: The Core Duties of a Jenkins Admin
+1. Installation and Upgrades
+Initial Setup: Installing Jenkins on Linux, Windows, or as a Docker container.
+
+Upgrades: Regularly updating the Jenkins "Core" (the WAR file) and plugins to patch security vulnerabilities.
+
+Backup & Restore: Setting up automated backups of $JENKINS_HOME (where all jobs and configs live).
+
+2. Security & User Management
+Authentication: Connecting Jenkins to LDAP, Active Directory, or GitHub for user login.
+
+Authorization: Using the Role-Based Strategy Plugin to ensure a "Junior Dev" can't delete a "Production Deploy" job.
+
+Credential Management: Overseeing the global vault (passwords/SSH keys).
+
+3. Node (Agent) Management
+Scaling: Adding new Worker Nodes when the build queue gets too long.
+
+Cloud Integration: Configuring "Dynamic Agents" that spin up on AWS EC2 or Kubernetes when needed and shut down afterward to save money.
+
+Tooling: Ensuring Java, Docker, Git, and Maven are installed and updated on all agent machines.
+
+4. System Optimization (Health Checks)
+Plugin Hygiene: Removing unused or buggy plugins that slow down the system.
+
+Cleanup: Setting up "Discard Old Builds" policies so the hard drive doesn't fill up with logs from 3 years ago.
+
+Monitoring: Using tools like Prometheus or the "Metrics Plugin" to track CPU/RAM usage.
