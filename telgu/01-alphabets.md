@@ -56,20 +56,23 @@ Consonant in Telugu are also called `హల్లులు (Hallulu)`.There are 
 ఞ [nya]
 ```
 ---
+```text
 ట [tta]
 ఠ [ttha]
 డ [dda]
 ఢ [ddha]
 ణ [nna]
+```
 --- 
+```text
 త [ta]
 థ [tha]
 ద [da]
 ధ [dha]
 న [na]
+```
 ప [pa]
-ఫ
-[pha]
+ఫ [pha]
 బ
 [ba]
 భ
